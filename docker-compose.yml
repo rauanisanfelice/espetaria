@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+    espetaria-postgre:
+        image: postgres:12
+        container_name: "ESPETARIA-POSTGRE"
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=docker123
+        ports:
+            - 5432:5432
+        volumes:
+            - volume-potgre-espetaria:/var/lib/postgresql:rw
+            - volume-postgre-data-espetaria:/var/lib/postgresql/data:rw
+        networks:
+            - network-postgres-espetaria
+
+    espetaria-pgadmin:
+        image: dpage/pgadmin4
+        container_name: "ESPETARIA-PGADMIN"
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "admin"
+            PGADMIN_DEFAULT_PASSWORD: "admin"
+        ports:
+            - 80:80
+        depends_on:
+            - espetaria-postgre
+        networks:
+            - network-postgres-espetaria
+
+networks:
+    network-postgres-espetaria:
+        driver: bridge
+
+volumes:
+    volume-potgre-espetaria:
+    volume-postgre-data-espetaria:
