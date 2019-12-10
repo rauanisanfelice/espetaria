@@ -1,7 +1,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/rauanisanfelice/espetaria.svg)
 ![GitHub top language](https://img.shields.io/github/languages/top/rauanisanfelice/espetaria.svg)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/rauanisanfelice/espetaria.svg)
-![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/rauanisanfelice/espetaria.svg)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/rauanisanfelice/espetaria)
 ![GitHub contributors](https://img.shields.io/github/contributors/rauanisanfelice/espetaria.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/rauanisanfelice/espetaria.svg)
 
