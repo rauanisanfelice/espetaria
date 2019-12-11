@@ -1,0 +1,22 @@
+{% extends 'template.html' %}
+{% load static %}
+
+{% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
+{% block title %}Produto List{% endblock %}
+
+{% comment %} BLOCO HEAD {% endcomment %}
+{% block head %}
+{% endblock %}
+
+{% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
+{% block body %}
+    <h1>Produto List</h1>
+    <a href="{% url 'produto_new' %}">Novo Produto</a>
+    <br>
+    <br>
+    
+{% endblock %}
+
+{% comment %} BLOCO DE SCPRITS {% endcomment %}
+{% block script %}
+{% endblock %}

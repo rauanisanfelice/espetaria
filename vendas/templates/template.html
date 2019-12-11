@@ -9,6 +9,11 @@
         {% block head %}{% endblock %}
     </head>
     <body>
+        <ul>
+            <dt><a href="{% url 'conta_list' %}">Conta</a></dt>
+            <dt><a href="{% url 'produto_list' %}">Produto</a></dt>
+            <dt><a href="{% url 'reports' %}">Relatórios</a></d>
+        </ul>
         {% block body %}{% endblock %}
         {% block script %}{% endblock %}
     </body>
