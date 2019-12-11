@@ -8,17 +8,44 @@ class index(View):
     def get(self, request):
         return render(request, self.retorno)
 
-class conta(View):
-    retorno = 'index.html'
-    def get(self, request):
-        return render(request, self.retorno)
-    
-class novoProduto(View):
-    retorno = 'index.html'
+############################################
+############################################
+class ContaList(View):
+    retorno = 'conta-list.html'
     def get(self, request):
         return render(request, self.retorno)
 
+class ContaNew(View):
+    retorno = 'conta-new.html'
+    def get(self, request):
+        return render(request, self.retorno)
+
+class ContaEnd(View):
+    retorno = 'conta.html'
+    def get(self, request):
+        return render(request, self.retorno)
+
+
+############################################
+############################################
+class ProdutoList(View):
+    retorno = 'produto-list.html'
+    def get(self, request):
+        return render(request, self.retorno)
+
+class ProdutoNew(View):
+    retorno = 'produto-new.html'
+    def get(self, request):
+        return render(request, self.retorno)
+
+class ProdutoDell(View):
+    retorno = 'produto-list.html'
+    def get(self, request):
+        return render(request, self.retorno)
+
+############################################
+############################################
 class reports(View):
-    retorno = 'index.html'
+    retorno = 'reports.html'
     def get(self, request):
         return render(request, self.retorno)
