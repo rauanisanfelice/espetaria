@@ -63,6 +63,7 @@ Name: #nome desejado#
 ### Iniciar o servidor.
 
 ```
+python manage.py migrate
 python manage.py runserver 8000 --noreload
 ```
 
