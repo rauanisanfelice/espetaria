@@ -6,11 +6,18 @@ from .views import *
 
 urlpatterns = [
     path('', index.as_view(), name='lancamento'),
-    path('conta-list/', ContaList.as_view(), name='conta_list'),
-    path('conta-new/', ContaNew.as_view(), name='conta_new'),
-    path('conta-end/', ContaEnd.as_view(), name='conta_end'),
+    
+    # MESAS
+    path('mesa-list/', MesaList.as_view(), name='mesa_list'),
+    path('mesa-new/', MesaNew.as_view(), name='mesa_new'),
+    path('mesa-end/', MesaEnd.as_view(), name='mesa_end'),
+    path('mesa-detail/', MesaDetail.as_view(), name='mesa_detail'),
+
+    # PRODUTOS
     path('produto-list/',ProdutoList.as_view(), name='produto_list'),
     path('produto-novo/',ProdutoNew.as_view(), name='produto_new'),
-    path('produto-dell/',ProdutoDell.as_view(), name='produto_dell'),
+    path('produto-dell/<int:id_produto>/',ProdutoDell, name='produto_dell'),
+
+    # REPORTS
     path('reports/', reports.as_view(), name='reports'),
 ]

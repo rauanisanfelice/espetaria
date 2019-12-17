@@ -11,6 +11,28 @@
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
     <h1>Novo Produto</h1>
+    {% if erro %}
+        <div>
+            {{ menssagem_erro }}
+        </div>
+    {% endif %}
+
+    {% if succes %}
+        <div>
+            {{ menssagem_succes }}
+        </div>
+    {% endif %}
+
+    <form action="." method="post">{% csrf_token %}
+        
+        <h5>Descrição do produto</h5>
+        <input type="text" name="produto" id="produto">
+        
+        <h5>Descrição do produto</h5>
+        <input type="number" name="valorUnit" id="valorUnit">
+
+        <input type="submit" value="Criar">
+    </form>
 {% endblock %}
 
 {% comment %} BLOCO DE SCPRITS {% endcomment %}

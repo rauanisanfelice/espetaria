@@ -14,6 +14,37 @@
     <a href="{% url 'produto_new' %}">Novo Produto</a>
     <br>
     <br>
+
+    {% if erro %}
+        <div>
+            {{ menssagem_erro }}
+        </div>
+    {% endif %}
+
+    {% if succes %}
+        <div>
+            {{ menssagem_succes }}
+        </div>
+    {% endif %}
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Valor Unitário</th>
+                <th>#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.descricao }}</td>
+                    <td>{{ produto.valor_unid }}</td>
+                    <td><a href="{% url 'produto_dell' produto.id %}">Deletar</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     
 {% endblock %}
 
