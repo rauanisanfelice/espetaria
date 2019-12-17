@@ -1,0 +1,38 @@
+{% extends 'template.html' %}
+{% load static %}
+
+{% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
+{% block title %}Nova mesa{% endblock %}
+
+{% comment %} BLOCO HEAD {% endcomment %}
+{% block head %}
+{% endblock %}
+
+{% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
+{% block body %}
+    <h1>Nova mesa</h1>
+    {% if erro %}
+        <div>
+            {{ menssagem_erro }}
+        </div>
+    {% endif %}
+
+    {% if succes %}
+        <div>
+            {{ menssagem_succes }}
+        </div>
+    {% endif %}
+
+    <form action="." method="post">{% csrf_token %}
+        
+        <h5>Nome da mesa</h5>
+        <input type="text" name="apelido" id="apelido">
+
+        <input type="submit" value="Criar">
+    </form>
+
+{% endblock %}
+
+{% comment %} BLOCO DE SCPRITS {% endcomment %}
+{% block script %}
+{% endblock %}

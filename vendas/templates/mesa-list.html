@@ -1,0 +1,50 @@
+{% extends 'template.html' %}
+{% load static %}
+
+{% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
+{% block title %}Mesa{% endblock %}
+
+{% comment %} BLOCO HEAD {% endcomment %}
+{% block head %}
+{% endblock %}
+
+{% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
+{% block body %}
+    <h1>Mesas</h1>
+    <a href="{% url 'mesa_new' %}">Nova mesa</a>
+    <br>
+    <br>
+    {% if erro %}
+        <div>
+            {{ menssagem_erro }}
+        </div>
+    {% endif %}
+
+    {% if succes %}
+        <div>
+            {{ menssagem_succes }}
+        </div>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Apelido</th>
+                <th>#</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mesa in mesas %}
+                <tr>
+                    <td>{{ mesa.apelido }}</td>
+                    <td><a href="{% url '' mesa.id %}">+</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% comment %} BLOCO DE SCPRITS {% endcomment %}
+{% block script %}
+{% endblock %}
