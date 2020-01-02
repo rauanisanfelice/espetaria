@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
-from .models import produto, mesa
+from .models import Produto, Mesa
 
 class index(View):
     retorno = 'index.html'
@@ -13,7 +13,7 @@ class index(View):
 class MesaList(View):
     retorno = 'mesa-list.html'
     def get(self, request):
-        mesas = mesa.objects.all().filter(data_encerramento=None)
+        mesas = Mesa.objects.all().filter(data_encerramento=None)
         return render(request, self.retorno, { 'mesas': mesas })
 
 class MesaNew(View):
@@ -31,9 +31,9 @@ class MesaNew(View):
                 'menssagem_erro': 'Campo nome vazio!',
             })
 
-        # TENTA SALVAR NOVO PRODUTO
+        # SALVAR NOVO PRODUTO
         try:
-            modelMesa = mesa(apelido=apelido)
+            modelMesa = Mesa(apelido=apelido)
             modelMesa.save()
             return render(request, self.retorno, {
                 'succes': 'ok',
@@ -52,17 +52,31 @@ class MesaEnd(View):
     def get(self, request):
         return render(request, self.retorno)
 
-class MesaDetail(View):
+# class MesaDetail(View):
+def MesaDetail(request, id_mesa):
     retorno = 'mesa.html'
-    def get(self, request):
-        return render(request, self.retorno)
+    
+    try:
+        mesa = Mesa.objects.get(id=int(id_mesa))
+        produtos_list = Produto.objects.all().filter(mesa_produtos__id=int(id_mesa))
+
+        return render(request, retorno, {
+            'mesa': mesa,
+            'produtos': produtos_list,
+        })
+    except:
+        return render(request, retorno, {
+            'mesa': None,
+            'produtos': None,
+        })
+    
 
 ############################################
 ############################################
 class ProdutoList(View):
     retorno = 'produto-list.html'
     def get(self, request):
-        produtos = produto.objects.all().filter(status=True)
+        produtos = Produto.objects.all().filter(status=True)
         return render(request, self.retorno, { 'produtos': produtos })
 
 class ProdutoNew(View):
@@ -90,7 +104,7 @@ class ProdutoNew(View):
 
         # TENTA SALVAR NOVO PRODUTO
         try:
-            modelProduto = produto(descricao=descricao, valor_unid=valorUnit)
+            modelProduto = Produto(descricao=descricao, valor_unid=valorUnit)
             modelProduto.save()
             return render(request, self.retorno, {
                 'succes': 'ok',
@@ -103,16 +117,15 @@ class ProdutoNew(View):
                 'menssagem_erro': 'Erro, tente novamente mais tarde!',
             })
 
-
-def ProdutoDell(request,id_produto):
+def ProdutoDell(request, id_produto):
     retorno = 'produto-list.html'
 
     try:
-        produtoDell = produto.objects.get(id=id_produto)
+        produtoDell = Produto.objects.get(id=id_produto)
         produtoDell.status = False
         produtoDell.save()
 
-        produtos = produto.objects.all().filter(status=True)
+        produtos = Produto.objects.all().filter(status=True)
         return render(request, retorno, {
             'succes': 'ok',
             'menssagem_succes': 'Produto deletado!',
@@ -125,6 +138,7 @@ def ProdutoDell(request,id_produto):
             'menssagem_erro': 'Erro, tente novamente mais tarde!',
             'produtos': produtos,
         })
+
 
 ############################################
 ############################################

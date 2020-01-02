@@ -12,23 +12,26 @@
 {% block body %}
     <h1>Nova mesa</h1>
     {% if erro %}
-        <div>
+        <div class="alert alert-danger" role="alert">
             {{ menssagem_erro }}
         </div>
     {% endif %}
 
     {% if succes %}
-        <div>
+        <div class="alert alert-success" role="alert">
             {{ menssagem_succes }}
         </div>
     {% endif %}
+    
 
     <form action="." method="post">{% csrf_token %}
         
-        <h5>Nome da mesa</h5>
-        <input type="text" name="apelido" id="apelido">
+        <div class="form-group">
+            <h5>Nome da mesa</h5>        
+            <input type="text" name="apelido" id="apelido">
+        </div>
 
-        <input type="submit" value="Criar">
+        <input type="submit" value="Criar" class="btn btn-outline-primary">
     </form>
 
 {% endblock %}

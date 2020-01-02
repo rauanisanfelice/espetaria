@@ -13,6 +13,11 @@
         {% block head %}{% endblock %}
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-warning center-text">
+            <a class="icon-back-top" href="#"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+            <span class="navbar-title">Cadastrar novo produto</span>
+            {% block navbar %}{% endblock %}
+        </nav>
         {% block body %}{% endblock %}
         {% block script %}{% endblock %}
     </body>
