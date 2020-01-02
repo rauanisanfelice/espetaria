@@ -10,42 +10,57 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
-    <h1>Produto List</h1>
-    <a href="{% url 'produto_new' %}">Novo Produto</a>
-    <br>
-    <br>
 
-    {% if erro %}
-        <div>
-            {{ menssagem_erro }}
-        </div>
-    {% endif %}
 
-    {% if succes %}
-        <div>
-            {{ menssagem_succes }}
+    <nav class="navbar navbar-expand-lg navbar-light bg-warning center-text">
+        <a class="icon-back-top" href="#"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+        <span class="navbar-title">Produtos</span>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                {% if erro %}
+                    <div>
+                        {{ menssagem_erro }}
+                    </div>
+                {% endif %}
+
+                {% if succes %}
+                    <div>
+                        {{ menssagem_succes }}
+                    </div>
+                {% endif %}
+
+                <!-- a href="{% url 'produto_new' %}" class="btn btn-primary btn-lg btn-block"><i class="fa fa-plus" aria-hidden="true"></i> Adicionar Produto</a -->
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Produto</th>
+                            <th scope="col">Valor Unitário</th>
+                            <th scope="col" class="text-center"><a href="{% url 'produto_new' %}"><i class="fa fa-plus" aria-hidden="true"></i></a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produto in produtos %}
+                            <tr>
+                                <td>{{ produto.descricao }}</td>
+                                <td>{{ produto.valor_unid }}</td>
+                                <td class="text-center">
+                                    <a class="icons-tbl-produtos" href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a class="icons-tbl-produtos" href="{% url 'produto_dell' produto.id %}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+
+            </div>
         </div>
-    {% endif %}
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Produto</th>
-                <th>Valor Unitário</th>
-                <th>#</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for produto in produtos %}
-                <tr>
-                    <td>{{ produto.descricao }}</td>
-                    <td>{{ produto.valor_unid }}</td>
-                    <td><a href="{% url 'produto_dell' produto.id %}">Deletar</a></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
+    </div>
 {% endblock %}
 
 {% comment %} BLOCO DE SCPRITS {% endcomment %}

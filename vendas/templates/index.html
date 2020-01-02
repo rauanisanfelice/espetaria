@@ -10,7 +10,14 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
-    <h1>Teste</h1>
+    <nav class="navbar navbar-expand-lg navbar-light bg-warning center-text">
+        <span class="navbar-title">Inicio</span>
+    </nav>
+    <ul class="menu-home">
+        <li><a class="icon-mesas" href="{% url 'mesa_list' %}">Mesas</a></li>
+        <li><a class="icon-produtos" href="{% url 'produto_list' %}">Produtos</a></li>
+        <li><a class="icon-relatorios" href="{% url 'reports' %}">Relatórios</a></li>
+    </ul>
 {% endblock %}
 
 {% comment %} BLOCO DE SCPRITS {% endcomment %}

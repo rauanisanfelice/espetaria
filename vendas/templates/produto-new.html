@@ -10,29 +10,41 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
-    <h1>Novo Produto</h1>
-    {% if erro %}
-        <div>
-            {{ menssagem_erro }}
+    <nav class="navbar navbar-expand-lg navbar-light bg-warning center-text">
+        <a class="icon-back-top" href="#"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
+        <span class="navbar-title">Cadastrar novo produto</span>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                {% if erro %}
+                    <div>
+                        {{ menssagem_erro }}
+                    </div>
+                {% endif %}
+
+                {% if succes %}
+                    <div>
+                        {{ menssagem_succes }}
+                    </div>
+                {% endif %}
+
+                <form action="." method="post">{% csrf_token %}
+                    <div class="form-group">
+                        <label for="produto">Nome</label>
+                        <input type="text" class="form-control" name="produto" id="produto">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valorUnit">Valor</label>
+                        <input type="number" step="any" class="form-control" name="valorUnit" id="valorUnit">
+                    </div>
+
+                    <input type="submit" class="btn btn-primary" value="Cadastrar">
+                </form>
+            </div>
         </div>
-    {% endif %}
-
-    {% if succes %}
-        <div>
-            {{ menssagem_succes }}
-        </div>
-    {% endif %}
-
-    <form action="." method="post">{% csrf_token %}
-        
-        <h5>Descrição do produto</h5>
-        <input type="text" name="produto" id="produto">
-        
-        <h5>Descrição do produto</h5>
-        <input type="number" name="valorUnit" id="valorUnit">
-
-        <input type="submit" value="Criar">
-    </form>
+    </div>
 {% endblock %}
 
 {% comment %} BLOCO DE SCPRITS {% endcomment %}
