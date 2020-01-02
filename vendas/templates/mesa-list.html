@@ -15,13 +15,13 @@
     <br>
     <br>
     {% if erro %}
-        <div>
+        <div class="alert alert-danger" role="alert">
             {{ menssagem_erro }}
         </div>
     {% endif %}
 
     {% if succes %}
-        <div>
+        <div class="alert alert-success" role="alert">
             {{ menssagem_succes }}
         </div>
     {% endif %}

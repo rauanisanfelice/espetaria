@@ -10,7 +10,76 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
-    <h1>Detalhes da mesa</h1>
+    {% if mesa %}
+        <h1>Detalhes da mesa</h1>
+        <strong>Responsável:</strong> {{ mesa.apelido }}
+        <br>
+        <br>
+
+        {% comment %} LISTA PRODUTOS {% endcomment %}
+        <table class="table table-hover table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Quantidade</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                    <tr scope="row">
+                        <td>{{ produto.descricao }}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        <!-- Botão para acionar modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#meuModal">
+            Novo Produto
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="meuModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Novo produto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% comment %} TABELA DE PRODUTOS  {% endcomment %}
+                    <table class="table table-hover table-sm">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Produto</th>
+                                <th scope="col">Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for produto in produtos %}
+                                <tr scope="row">
+                                    <td>{{ produto.descricao }}</td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Salvar mudanças</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+    {% else %}
+        <h1>Algo aconteceu de errado!</h1>
+    {% endif %}
 {% endblock %}
 
 {% comment %} BLOCO DE SCPRITS {% endcomment %}
