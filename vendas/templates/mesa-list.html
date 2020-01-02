@@ -26,18 +26,18 @@
         </div>
     {% endif %}
 
-    <table>
-        <thead>
+    <table class="table table-hover">
+        <thead class="thead-dark">
             <tr>
-                <th>Apelido</th>
-                <th>#</th>
+                <th scope="col">Apelido</th>
+                <th scope="col">#</th>
             </tr>
         </thead>
         <tbody>
             {% for mesa in mesas %}
-                <tr>
+                <tr scope="row">
                     <td>{{ mesa.apelido }}</td>
-                    <td><a href="{% url '' mesa.id %}">+</a></td>
+                    <td><a href="{% url 'mesa_detail' mesa.id %}">+</a></td>
                 </tr>
             {% endfor %}
         </tbody>

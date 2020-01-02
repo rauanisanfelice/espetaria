@@ -27,17 +27,17 @@
         </div>
     {% endif %}
     
-    <table>
-        <thead>
+    <table class="table table-hover">
+        <thead class="thead-dark">
             <tr>
-                <th>Produto</th>
-                <th>Valor Unitário</th>
-                <th>#</th>
+                <th scope="col">Produto</th>
+                <th scope="col">Valor Unitário</th>
+                <th scope="col">#</th>
             </tr>
         </thead>
         <tbody>
             {% for produto in produtos %}
-                <tr>
+                <tr scope="row">
                     <td>{{ produto.descricao }}</td>
                     <td>{{ produto.valor_unid }}</td>
                     <td><a href="{% url 'produto_dell' produto.id %}">Deletar</a></td>
