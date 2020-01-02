@@ -11,4 +11,4 @@ class Mesa(models.Model):
     quantidade = models.IntegerField(null=True)
     data_lancamento = models.DateTimeField(auto_now_add=True)
     data_encerramento = models.DateTimeField(null=True)
-    produtos = models.ManyToManyField(Produto)
+    produtos = models.ManyToManyField(Produto, related_name='mesa_produtos')
