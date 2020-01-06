@@ -17,6 +17,7 @@ urlpatterns = [
     path('produto-list/',ProdutoList.as_view(), name='produto_list'),
     path('produto-novo/',ProdutoNew.as_view(), name='produto_new'),
     path('produto-dell/<int:id_produto>/',ProdutoDell, name='produto_dell'),
+    path('produto-edit/<int:id_produto>/',ProdutoEdit.as_view(), name='produto_edit'),
 
     # REPORTS
     path('reports/', reports.as_view(), name='reports'),

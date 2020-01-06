@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import View
 
 from .models import Produto, Mesa
@@ -139,7 +139,37 @@ def ProdutoDell(request, id_produto):
             'produtos': produtos,
         })
 
+class ProdutoEdit(View):
+    retorno = 'produto-edit.html'
 
+    def get(self, request, id_produto):
+        produto = get_object_or_404(Produto, pk=id_produto)
+        return render(request, self.retorno,{
+            'produto': produto,
+        })
+    
+    def post(self, request, id_produto):
+        try:
+            produto = get_object_or_404(Produto, pk=id_produto)
+            produto.descricao = request.POST.get('produto')
+            produto.valor_unid = request.POST.get('valorUnit')
+            produto.save()
+            
+            return render(request, self.retorno, {
+                'succes': 'ok',
+                'menssagem_succes': 'Produto deletado!',
+                'produto': produto,
+            })
+
+        except:
+            
+            produto = get_object_or_404(Produto, pk=id_produto)
+            return render(request, self.retorno, {
+                'erro': 'Erro',
+                'menssagem_erro': 'Erro, tente novamente mais tarde!',
+                'produto': produto,
+            })
+            
 ############################################
 ############################################
 class reports(View):

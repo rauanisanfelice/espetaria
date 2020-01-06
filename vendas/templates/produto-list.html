@@ -48,7 +48,7 @@
                                 <td>{{ produto.descricao }}</td>
                                 <td>{{ produto.valor_unid }}</td>
                                 <td class="text-center">
-                                    <a class="icons-tbl-produtos" href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                    <a class="icons-tbl-produtos" href="{% url 'produto_edit' produto.id %}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                     <a class="icons-tbl-produtos" href="{% url 'produto_dell' produto.id %}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                                 </td>
                             </tr>

@@ -1,0 +1,60 @@
+{% extends 'template.html' %}
+{% load static %}
+
+{% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
+{% block title %}Editar Produto{% endblock %}
+{% block navbar %}Editar Produto{% endblock %}
+
+{% comment %} BLOCO HEAD {% endcomment %}
+{% block head %}
+{% endblock %}
+
+{% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                
+                {% if erro %}
+                    <br>
+                    <div class="row justify-content-center">
+                        <div class="alert alert-danger" role="alert">
+                            {{ menssagem_erro }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if succes %}
+                    <br>
+                    <div class="row justify-content-center">
+                        <div class="alert alert-success" role="alert">
+                            {{ menssagem_succes }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if produto %}
+                    <form action="." method="post">{% csrf_token %}
+                        <div class="form-group">
+                            <label for="produto">Nome</label>
+                            <input type="text" class="form-control" name="produto" id="produto" value="{{ produto.descricao }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="valorUnit">Valor</label>
+                            <input type="number" step="any" class="form-control" name="valorUnit" id="valorUnit" value="{{ produto.valor_unid }}">
+                        </div>
+
+                        <input type="submit" class="btn btn-primary" value="Editar">
+                    </form>
+                {% else %}
+                    <h1>Algo deu errado!</h1>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% comment %} BLOCO DE SCPRITS {% endcomment %}
+{% block script %}
+{% endblock %}
