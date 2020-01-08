@@ -3,6 +3,7 @@
 
 {% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
 {% block title %}Nova mesa{% endblock %}
+{% block navbar %}Nova mesa{% endblock %}
 
 {% comment %} BLOCO HEAD {% endcomment %}
 {% block head %}
@@ -10,19 +11,21 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
-    <h1>Nova mesa</h1>
     {% if erro %}
-        <div class="alert alert-danger" role="alert">
-            {{ menssagem_erro }}
+        <br><div class="row justify-content-center">
+            <div class="alert alert-danger" role="alert">
+                {{ menssagem_erro }}
+            </div>
         </div>
     {% endif %}
 
     {% if succes %}
-        <div class="alert alert-success" role="alert">
-            {{ menssagem_succes }}
+        <br><div class="row justify-content-center">
+            <div class="alert alert-success" role="alert">
+                {{ menssagem_succes }}
+            </div>
         </div>
     {% endif %}
-    
 
     <form action="." method="post">{% csrf_token %}
         
