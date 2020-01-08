@@ -2,7 +2,8 @@
 {% load static %}
 
 {% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
-{% block title %}Produto List{% endblock %}
+{% block title %}Produtos{% endblock %}
+{% block navbar %}Produtos{% endblock %}
 
 {% comment %} BLOCO HEAD {% endcomment %}
 {% block head %}
@@ -10,25 +11,25 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
-
-
-    <nav class="navbar navbar-expand-lg navbar-light bg-warning center-text">
-        <a class="icon-back-top" href="#"><i class="fa fa-angle-left" aria-hidden="true"></i></a>
-        <span class="navbar-title">Produtos</span>
-    </nav>
     <div class="container">
         <div class="row">
             <div class="col-12">
 
                 {% if erro %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ menssagem_erro }}
+                    <br>
+                    <div class="row justify-content-center">
+                        <div class="alert alert-danger" role="alert">
+                            {{ menssagem_erro }}
+                        </div>
                     </div>
                 {% endif %}
 
                 {% if succes %}
-                    <div class="alert alert-success" role="alert">
-                        {{ menssagem_succes }}
+                    <br>
+                    <div class="row justify-content-center">
+                        <div class="alert alert-success" role="alert">
+                            {{ menssagem_succes }}
+                        </div>
                     </div>
                 {% endif %}
 

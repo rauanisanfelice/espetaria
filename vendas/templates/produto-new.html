@@ -3,6 +3,7 @@
 
 {% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
 {% block title %}Novo Produto{% endblock %}
+{% block navbar %}Novo Produto{% endblock %}
 
 {% comment %} BLOCO HEAD {% endcomment %}
 {% block head %}
@@ -15,23 +16,22 @@
             <div class="col-12">
                 
                 {% if erro %}
-                    <div class="row">
+                    <br>
+                    <div class="row justify-content-center">
                         <div class="alert alert-danger" role="alert">
                             {{ menssagem_erro }}
                         </div>
                     </div>
                 {% endif %}
                 
-            
-                
                 {% if succes %}
-                    <div class="row">
+                    <br>
+                    <div class="row justify-content-center">
                         <div class="alert alert-success" role="alert">
                             {{ menssagem_succes }}
                         </div>
                     </div>
                 {% endif %}
-                
 
                 <form action="." method="post">{% csrf_token %}
                     <div class="form-group">
