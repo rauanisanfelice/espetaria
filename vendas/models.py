@@ -8,7 +8,11 @@ class Produto(models.Model):
 
 class Mesa(models.Model):
     apelido = models.CharField(max_length=50)
-    quantidade = models.IntegerField(null=True)
-    data_lancamento = models.DateTimeField(auto_now_add=True)
     data_encerramento = models.DateTimeField(null=True)
     produtos = models.ManyToManyField(Produto, related_name='mesa_produtos')
+
+class Venda(models.Model):
+    mesa = models.ForeignKey(Mesa, on_delete=models.PROTECT)
+    produto = models.ForeignKey(Produto, on_delete=models.PROTECT)
+    quantidade = models.IntegerField(null=True)
+    data_lancamento = models.DateTimeField(auto_now_add=True)
