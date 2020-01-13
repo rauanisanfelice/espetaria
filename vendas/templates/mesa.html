@@ -3,6 +3,7 @@
 
 {% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
 {% block title %}Detalhes da mesa{% endblock %}
+{% block navbar %}Detalhes da mesa{% endblock %}
 
 {% comment %} BLOCO HEAD {% endcomment %}
 {% block head %}
@@ -11,10 +12,7 @@
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
     {% if mesa %}
-        <h1>Detalhes da mesa</h1>
         <strong>Responsável:</strong> {{ mesa.apelido }}
-        <br>
-        <br>
 
         {% comment %} LISTA PRODUTOS {% endcomment %}
         <table class="table table-hover table-sm">
@@ -25,63 +23,150 @@
                 </tr>
             </thead>
             <tbody>
-                {% for produto in produtos %}
+                {% for produto_mesa in produtos_mesa %}
                     <tr scope="row">
-                        <td>{{ produto.descricao }}</td>
-                        <td></td>
+                        <td>{{ produto_mesa.produto__descricao }}</td>
+                        <td>{{ produto_mesa.total }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
 
         <br>
-        <!-- Botão para acionar modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#meuModal">
-            Novo Produto
-        </button>
+        <div class="row justify-content-center">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#meuModal">
+                Novo Produto
+            </button>
+
+            <button type="button" class="btn btn-danger">
+                Encerrar
+            </button>
+        </div>
 
         <!-- Modal -->
         <div class="modal fade" id="meuModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Novo produto</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {% comment %} TABELA DE PRODUTOS  {% endcomment %}
-                    <table class="table table-hover table-sm">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Produto</th>
-                                <th scope="col">Quantidade</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for produto in produtos %}
-                                <tr scope="row">
-                                    <td>{{ produto.descricao }}</td>
-                                    <td></td>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Novo produto</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% comment %} TABELA DE PRODUTOS  {% endcomment %}
+                        <table class="table table-hover table-sm">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Produto</th>
+                                    <th scope="col">Quantidade</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar mudanças</button>
-                </div>
+                            </thead>
+                            <tbody id="tbody">
+                                {% for produto in produtos %}
+                                    <tr scope="row">
+                                        <td>
+                                            {{ produto.descricao }}
+                                            <input type="hidden" name="descricao" value="{{ produto.id }}">
+                                        </td>
+                                        <td>
+                                            <!-- Change the `data-field` of buttons and `name` of input field's for multiple plus minus buttons-->
+                                            <div class="input-group plus-minus-input">
+                                                <div class="input-group-button">
+                                                    <button type="button" class="button hollow circle" data-quantity="minus" data-field="quantidade">
+                                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <input class="input-group-field" type="number" name="quantidade" value="0">
+                                                <div class="input-group-button">
+                                                    <button type="button" class="button hollow circle" data-quantity="plus" data-field="quantidade">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Fechar">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick="SalvarProdutos({{ mesa.id }})">Salvar</button>
+                    </div>
                 </div>
             </div>
         </div>
+        
 
     {% else %}
-        <h1>Algo aconteceu de errado!</h1>
+        <br><div class="row justify-content-center">
+            <h1>Algo aconteceu de errado!</h1>
+        </div>
     {% endif %}
 {% endblock %}
 
 {% comment %} BLOCO DE SCPRITS {% endcomment %}
 {% block script %}
+    <script>
+        function SalvarProdutos(id_mesa){
+            var tabela = $('tbody')[1]['children'];
+            for (var i = 0; i <  tabela.length; i ++){
+                var id_produto =  tabela[i]['cells'][0].firstElementChild.value;
+                var quantidade =  tabela[i]['cells'][1].firstElementChild['children'][1].value;
+                SalvaProduto(id_mesa, id_produto, quantidade);
+            }
+        }
+
+        function SalvaProduto(id_mesa, id_produto, quantidade){
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'mesa_add_produto' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    'id_mesa': id_mesa,
+                    'id_produto': id_produto,
+                    'quantidade': quantidade,
+                }
+            });
+        }
+
+        jQuery(document).ready(function(){
+            // This button will increment the value
+            $('[data-quantity="plus"]').click(function(e){
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                fieldName = $(this).attr('data-field');
+                // Get its current value
+                var currentVal = parseInt($('input[name='+fieldName+']').val());
+                // If is not undefined
+                if (!isNaN(currentVal)) {
+                    // Increment
+                    $('input[name='+fieldName+']').val(currentVal + 1);
+                } else {
+                    // Otherwise put a 0 there
+                    $('input[name='+fieldName+']').val(0);
+                }
+            });
+            // This button will decrement the value till 0
+            $('[data-quantity="minus"]').click(function(e) {
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                fieldName = $(this).attr('data-field');
+                // Get its current value
+                var currentVal = parseInt($('input[name='+fieldName+']').val());
+                // If it isn't undefined or its greater than 0
+                if (!isNaN(currentVal) && currentVal > 0) {
+                    // Decrement one
+                    $('input[name='+fieldName+']').val(currentVal - 1);
+                } else {
+                    // Otherwise put a 0 there
+                    $('input[name='+fieldName+']').val(0);
+                }
+            });
+        });
+
+    </script>
 {% endblock %}

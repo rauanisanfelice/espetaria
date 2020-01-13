@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, Http404
 from django.views.generic import View
+from django.db.models import Sum
 
-from .models import Produto, Mesa
+from .models import Produto, Mesa, Venda
+
+import json
 
 class index(View):
     retorno = 'index.html'
@@ -46,6 +50,33 @@ class MesaNew(View):
                 'menssagem_erro': 'Erro, tente novamente mais tarde!',
             })
 
+def MesaAddProduto(request):
+    retorno = ""
+    id_mesa = request.POST.get('id_mesa')
+    id_produto = request.POST.get('id_produto')
+    quantidade = request.POST.get('quantidade')
+
+    try:
+        mesa = Mesa.objects.get(id=int(id_mesa))
+        produto = Produto.objects.all().get(id=int(id_produto))
+
+        venda = Venda(mesa=mesa, produto=produto, quantidade=quantidade)
+        venda.save()
+        
+        retorno = {
+            'succes': 'ok',
+            'succes': 'ok',
+            'menssagem_succes': 'Produto adicionado!',
+        }
+
+    except:
+        retorno = {
+            'erro': 'Erro',
+            'menssagem_erro': 'Erro, tente novamente mais tarde!',
+        }
+    finally:
+        return HttpResponse(json.dumps(retorno), content_type="application/json")
+
 
 class MesaEnd(View):
     retorno = 'mesa-list.html'
@@ -55,14 +86,15 @@ class MesaEnd(View):
 # class MesaDetail(View):
 def MesaDetail(request, id_mesa):
     retorno = 'mesa.html'
-    
     try:
+        produtos_mesa = Venda.objects.all().filter(mesa__id=id_mesa).values('produto__descricao').order_by('produto__descricao').annotate(total=Sum('quantidade'))
         mesa = Mesa.objects.get(id=int(id_mesa))
-        produtos_list = Produto.objects.all().filter(mesa_produtos__id=int(id_mesa))
+        produtos = Produto.objects.all()
 
         return render(request, retorno, {
             'mesa': mesa,
-            'produtos': produtos_list,
+            'produtos': produtos,
+            'produtos_mesa': produtos_mesa,
         })
     except:
         return render(request, retorno, {
@@ -157,7 +189,7 @@ class ProdutoEdit(View):
             
             return render(request, self.retorno, {
                 'succes': 'ok',
-                'menssagem_succes': 'Produto deletado!',
+                'menssagem_succes': 'Produto editado com sucesso!',
                 'produto': produto,
             })
 

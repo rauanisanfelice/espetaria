@@ -11,6 +11,7 @@ urlpatterns = [
     path('mesa-list/', MesaList.as_view(), name='mesa_list'),
     path('mesa-new/', MesaNew.as_view(), name='mesa_new'),
     path('mesa-end/', MesaEnd.as_view(), name='mesa_end'),
+    path('mesa-add-produto/', MesaAddProduto, name='mesa_add_produto'),
     path('mesa-detail/<int:id_mesa>/', MesaDetail, name='mesa_detail'),
 
     # PRODUTOS
