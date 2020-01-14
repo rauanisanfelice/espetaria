@@ -13,6 +13,7 @@ urlpatterns = [
     path('mesa-end/', MesaEnd.as_view(), name='mesa_end'),
     path('mesa-add-produto/', MesaAddProduto, name='mesa_add_produto'),
     path('mesa-detail/<int:id_mesa>/', MesaDetail, name='mesa_detail'),
+    path('mesa-end/<int:id_mesa>/', MesaEnd, name='mesa_end'),
 
     # PRODUTOS
     path('produto-list/',ProdutoList.as_view(), name='produto_list'),

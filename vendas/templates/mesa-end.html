@@ -1,0 +1,121 @@
+{% extends 'template.html' %}
+{% load static %}
+
+{% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
+{% block title %}Encerrar mesa{% endblock %}
+{% block navbar %}Encerrar mesa{% endblock %}
+
+{% comment %} BLOCO HEAD {% endcomment %}
+{% block head %}
+{% endblock %}
+
+{% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
+{% block body %}
+    {% if mesa %}
+        <strong>Responsável:</strong> {{ mesa.apelido }}
+
+        {% comment %} LISTA PRODUTOS {% endcomment %}
+        <table class="table table-hover table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto_mesa in produtos_mesa %}
+                    <tr scope="row">
+                        <td>{{ produto_mesa.produto__descricao }}</td>
+                        <td>{{ produto_mesa.quantidade }}</td>
+                        <td>{{ produto_mesa.total }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        <div class="row justify-content-end">
+            <div class="text-black-50">
+                Total: {{ total }}
+            </div>
+        </divc>
+
+        <br>
+        <div class="row justify-content-center">
+            <button type="button" class="btn btn-danger">
+                Encerrar
+            </button>
+        </div>
+
+    {% else %}
+        <br><div class="row justify-content-center">
+            <h1>Algo aconteceu de errado!</h1>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% comment %} BLOCO DE SCPRITS {% endcomment %}
+{% block script %}
+    <script>
+        function SalvarProdutos(id_mesa){
+            var tabela = $('tbody')[1]['children'];
+            for (var i = 0; i <  tabela.length; i ++){
+                var id_produto =  tabela[i]['cells'][0].firstElementChild.value;
+                var quantidade =  tabela[i]['cells'][1].firstElementChild['children'][1].value;
+                SalvaProduto(id_mesa, id_produto, quantidade);
+            }
+        }
+
+        function SalvaProduto(id_mesa, id_produto, quantidade){
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'mesa_add_produto' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    'id_mesa': id_mesa,
+                    'id_produto': id_produto,
+                    'quantidade': quantidade,
+                }
+            });
+        }
+
+        jQuery(document).ready(function(){
+            // This button will increment the value
+            $('[data-quantity="plus"]').click(function(e){
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                fieldName = $(this).attr('data-field');
+                // Get its current value
+                var currentVal = parseInt($('input[name='+fieldName+']').val());
+                // If is not undefined
+                if (!isNaN(currentVal)) {
+                    // Increment
+                    $('input[name='+fieldName+']').val(currentVal + 1);
+                } else {
+                    // Otherwise put a 0 there
+                    $('input[name='+fieldName+']').val(0);
+                }
+            });
+            // This button will decrement the value till 0
+            $('[data-quantity="minus"]').click(function(e) {
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                fieldName = $(this).attr('data-field');
+                // Get its current value
+                var currentVal = parseInt($('input[name='+fieldName+']').val());
+                // If it isn't undefined or its greater than 0
+                if (!isNaN(currentVal) && currentVal > 0) {
+                    // Decrement one
+                    $('input[name='+fieldName+']').val(currentVal - 1);
+                } else {
+                    // Otherwise put a 0 there
+                    $('input[name='+fieldName+']').val(0);
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

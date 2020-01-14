@@ -34,13 +34,9 @@
 
         <br>
         <div class="row justify-content-center">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#meuModal">
-                Novo Produto
-            </button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#meuModal">Novo Produto</button>
 
-            <button type="button" class="btn btn-danger">
-                Encerrar
-            </button>
+            <a href="{% url 'mesa_end' mesa.id %}" class="btn btn-danger">Encerrar</a>
         </div>
 
         <!-- Modal -->

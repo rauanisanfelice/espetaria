@@ -6,6 +6,7 @@ from django.db.models import Sum
 from .models import Produto, Mesa, Venda
 
 import json
+import psycopg2
 
 class index(View):
     retorno = 'index.html'
@@ -79,17 +80,84 @@ def MesaAddProduto(request):
 
 
 class MesaEnd(View):
-    retorno = 'mesa-list.html'
+    retorno = 'mesa-end.html'
     def get(self, request):
-        return render(request, self.retorno)
+
+        # VARIAVEIS DO VAREJISTA
+        host = 'localhost'
+        dbname = 'postgres'
+        port = '5432'
+        username = 'postgres'
+        password = 'postgres'
+
+        try:
+            # Acesar o banco
+            conn = psycopg2.connect(host=host, dbname=dbname, user=username, password=password, port=port)  # Connect to an existing database
+            cur = conn.cursor()  # Open a cursor to perform database operations
+
+            select = """
+            select
+                vv.mesa_id, vm.apelido, vv.produto_id,
+                vp.descricao as "descricao produto",
+                sum(vv.quantidade) as "total quantidade",
+                sum(vp.valor_unid) as "valor unidade",
+                (sum(vv.quantidade) * sum(vp.valor_unid)) as "total"
+            from vendas_venda vv
+                inner join vendas_mesa vm on vv.mesa_id = vm.id 
+                inner join vendas_produto vp on vv.produto_id  = vp.id
+            where vv.mesa_id = (%s)
+            group by vv.mesa_id, vm.apelido, vv.produto_id, vp.descricao
+            order by vv.produto_id, vv.mesa_id;
+            """
+            
+            # TOTAL POR PRODUTO
+            cur.execute(select, (id_mesa))
+            produtos_mesa = cur.fetchall()
+
+            select = """
+            select t.mesa_id, t.apelido, sum(t.total) from (
+                select
+                    vv.mesa_id as "mesa_id", vm.apelido as "apelido",
+                    (sum(vv.quantidade) * sum(vp.valor_unid)) as "total"
+                from vendas_venda vv
+                    inner join vendas_mesa vm on vv.mesa_id = vm.id 
+                    inner join vendas_produto vp on vv.produto_id  = vp.id
+                where vv.mesa_id = (%s)
+                group by vv.mesa_id, vm.apelido,
+            ) t
+            group by t.mesa_id, t.apelido
+            order by t.mesa_id
+            """
+
+            cur.execute(select, (id_mesa))
+            total = cur.fetchall()
+
+            cur.close()
+            conn.close()
+
+            return render(request, retorno, {
+                'mesa': mesa,
+                'produtos_mesa': produtos_mesa,
+                'total': total,
+            })
+
+        except:
+            return render(request, self.retorno, {
+                'mesa': None,
+                'produtos_mesa': None,
+                'total': None,
+            })
+    
+    def post(self, request):
+        pass
 
 # class MesaDetail(View):
 def MesaDetail(request, id_mesa):
     retorno = 'mesa.html'
+    produtos_mesa = Venda.objects.all().filter(mesa__id=id_mesa).values('produto__descricao').order_by('produto__descricao').annotate(total=Sum('quantidade'))
+    mesa = Mesa.objects.get(id=int(id_mesa))
+    produtos = Produto.objects.all()
     try:
-        produtos_mesa = Venda.objects.all().filter(mesa__id=id_mesa).values('produto__descricao').order_by('produto__descricao').annotate(total=Sum('quantidade'))
-        mesa = Mesa.objects.get(id=int(id_mesa))
-        produtos = Produto.objects.all()
 
         return render(request, retorno, {
             'mesa': mesa,
