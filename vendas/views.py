@@ -4,6 +4,7 @@ from django.views.generic import View
 from django.db.models import Sum
 
 from .models import Produto, Mesa, Venda
+from datetime import datetime
 
 import json
 import psycopg2
@@ -81,66 +82,70 @@ def MesaAddProduto(request):
 
 class MesaEnd(View):
     retorno = 'mesa-end.html'
-    def get(self, request):
-
-        # VARIAVEIS DO VAREJISTA
-        host = 'localhost'
-        dbname = 'postgres'
-        port = '5432'
-        username = 'postgres'
-        password = 'postgres'
-
+    def get(self, request, id_mesa):
         try:
+            # VARIAVEIS DO VAREJISTA
+            host = 'localhost'
+            dbname = 'postgres'
+            port = '5432'
+            username = 'postgres'
+            password = 'docker123'
+
             # Acesar o banco
-            conn = psycopg2.connect(host=host, dbname=dbname, user=username, password=password, port=port)  # Connect to an existing database
-            cur = conn.cursor()  # Open a cursor to perform database operations
+            conn = psycopg2.connect(host=host, dbname=dbname, user=username, password=password, port=port)
+            cur = conn.cursor()
 
             select = """
             select
                 vv.mesa_id, vm.apelido, vv.produto_id,
                 vp.descricao as "descricao produto",
                 sum(vv.quantidade) as "total quantidade",
-                sum(vp.valor_unid) as "valor unidade",
-                (sum(vv.quantidade) * sum(vp.valor_unid)) as "total"
+                max(vp.valor_unid) as "valor unidade",
+                (sum(vv.quantidade) * max(vp.valor_unid)) as "total"
             from vendas_venda vv
                 inner join vendas_mesa vm on vv.mesa_id = vm.id 
                 inner join vendas_produto vp on vv.produto_id  = vp.id
-            where vv.mesa_id = (%s)
+            where vv.mesa_id = %s
             group by vv.mesa_id, vm.apelido, vv.produto_id, vp.descricao
             order by vv.produto_id, vv.mesa_id;
-            """
+            """ % id_mesa
             
             # TOTAL POR PRODUTO
-            cur.execute(select, (id_mesa))
+            cur.execute(select)
             produtos_mesa = cur.fetchall()
+            cur.close()
 
             select = """
             select t.mesa_id, t.apelido, sum(t.total) from (
                 select
                     vv.mesa_id as "mesa_id", vm.apelido as "apelido",
-                    (sum(vv.quantidade) * sum(vp.valor_unid)) as "total"
+                    vv.produto_id as "produto",
+                    (sum(vv.quantidade) * max(vp.valor_unid)) as "total"
                 from vendas_venda vv
                     inner join vendas_mesa vm on vv.mesa_id = vm.id 
                     inner join vendas_produto vp on vv.produto_id  = vp.id
-                where vv.mesa_id = (%s)
-                group by vv.mesa_id, vm.apelido,
+                where vv.mesa_id = %s
+                group by vv.mesa_id, vm.apelido, vv.produto_id
             ) t
             group by t.mesa_id, t.apelido
-            order by t.mesa_id
-            """
+            order by t.mesa_id;
+            """ % id_mesa
 
-            cur.execute(select, (id_mesa))
+            # Acesar o banco
+            cur = conn.cursor()
+            cur.execute(select)
             total = cur.fetchall()
 
             cur.close()
             conn.close()
-
-            return render(request, retorno, {
+            
+            mesa = Mesa.objects.get(id=int(id_mesa))
+            return render(request, self.retorno, {
                 'mesa': mesa,
                 'produtos_mesa': produtos_mesa,
                 'total': total,
             })
-
+        
         except:
             return render(request, self.retorno, {
                 'mesa': None,
@@ -148,8 +153,14 @@ class MesaEnd(View):
                 'total': None,
             })
     
-    def post(self, request):
-        pass
+    def post(self, request, id_mesa):
+        mesa = Mesa.objects.get(id=int(id_mesa))
+        mesa.ativo = False
+        mesa.data_encerramento = datetime.today()
+        mesa.save()
+
+        return redirect('lancamento')
+        
 
 # class MesaDetail(View):
 def MesaDetail(request, id_mesa):

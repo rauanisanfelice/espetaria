@@ -18,17 +18,19 @@
         <table class="table table-hover table-sm">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Produto</th>
-                    <th scope="col">Quantidade</th>
-                    <th scope="col">Total</th>
+                    <th scope="col" class="text-center">Produto</th>
+                    <th scope="col" class="text-center">Quantidade</th>
+                    <th scope="col" class="text-center">Valor Unidade</th>
+                    <th scope="col" class="text-center">Total</th>
                 </tr>
             </thead>
             <tbody>
                 {% for produto_mesa in produtos_mesa %}
                     <tr scope="row">
-                        <td>{{ produto_mesa.produto__descricao }}</td>
-                        <td>{{ produto_mesa.quantidade }}</td>
-                        <td>{{ produto_mesa.total }}</td>
+                        <td class="text-center">{{ produto_mesa.3 }}</td>
+                        <td class="text-center">{{ produto_mesa.4 }}</td>
+                        <td class="text-center">{{ produto_mesa.5 }}</td>
+                        <td class="text-center">{{ produto_mesa.6 }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -36,16 +38,21 @@
 
         <br>
         <div class="row justify-content-end">
-            <div class="text-black-50">
-                Total: {{ total }}
+            <div class="col-5">
+                {% if total %}
+                    <strong>Total:</strong><span class="text-lg-center"> R$ {{ total.0.2 }}</span>
+                {% endif %}
             </div>
-        </divc>
+        </div>
 
         <br>
         <div class="row justify-content-center">
-            <button type="button" class="btn btn-danger">
-                Encerrar
-            </button>
+            <form action="#" method="post">{% csrf_token %}
+                <input type="hidden" name="id_mesa" value="{{ mesa.id }}">
+                <button type="submit" class="btn btn-danger">
+                    Encerrar
+                </button>
+            </form>
         </div>
 
     {% else %}
@@ -57,65 +64,4 @@
 
 {% comment %} BLOCO DE SCPRITS {% endcomment %}
 {% block script %}
-    <script>
-        function SalvarProdutos(id_mesa){
-            var tabela = $('tbody')[1]['children'];
-            for (var i = 0; i <  tabela.length; i ++){
-                var id_produto =  tabela[i]['cells'][0].firstElementChild.value;
-                var quantidade =  tabela[i]['cells'][1].firstElementChild['children'][1].value;
-                SalvaProduto(id_mesa, id_produto, quantidade);
-            }
-        }
-
-        function SalvaProduto(id_mesa, id_produto, quantidade){
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'mesa_add_produto' %}",
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                    'id_mesa': id_mesa,
-                    'id_produto': id_produto,
-                    'quantidade': quantidade,
-                }
-            });
-        }
-
-        jQuery(document).ready(function(){
-            // This button will increment the value
-            $('[data-quantity="plus"]').click(function(e){
-                // Stop acting like a button
-                e.preventDefault();
-                // Get the field name
-                fieldName = $(this).attr('data-field');
-                // Get its current value
-                var currentVal = parseInt($('input[name='+fieldName+']').val());
-                // If is not undefined
-                if (!isNaN(currentVal)) {
-                    // Increment
-                    $('input[name='+fieldName+']').val(currentVal + 1);
-                } else {
-                    // Otherwise put a 0 there
-                    $('input[name='+fieldName+']').val(0);
-                }
-            });
-            // This button will decrement the value till 0
-            $('[data-quantity="minus"]').click(function(e) {
-                // Stop acting like a button
-                e.preventDefault();
-                // Get the field name
-                fieldName = $(this).attr('data-field');
-                // Get its current value
-                var currentVal = parseInt($('input[name='+fieldName+']').val());
-                // If it isn't undefined or its greater than 0
-                if (!isNaN(currentVal) && currentVal > 0) {
-                    // Decrement one
-                    $('input[name='+fieldName+']').val(currentVal - 1);
-                } else {
-                    // Otherwise put a 0 there
-                    $('input[name='+fieldName+']').val(0);
-                }
-            });
-        });
-
-    </script>
 {% endblock %}
