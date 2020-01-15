@@ -283,7 +283,17 @@ class ProdutoEdit(View):
             
 ############################################
 ############################################
-class reports(View):
+class Reports(View):
     retorno = 'reports.html'
+    def get(self, request):
+        return render(request, self.retorno)
+
+class Reports_hist(View):
+    retorno = 'reports-hist.html'
+    def get(self, request):
+        return render(request, self.retorno)
+    
+class Reports_comp(View):
+    retorno = 'reports-comparativo.html'
     def get(self, request):
         return render(request, self.retorno)

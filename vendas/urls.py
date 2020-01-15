@@ -22,5 +22,7 @@ urlpatterns = [
     path('produto-edit/<int:id_produto>/',ProdutoEdit.as_view(), name='produto_edit'),
 
     # REPORTS
-    path('reports/', reports.as_view(), name='reports'),
+    path('reports/', Reports.as_view(), name='reports'),
+    path('reports-hist/', Reports_hist.as_view(), name='reports_hist'),
+    path('reports-comparativo/', Reports_comp.as_view(), name='reports_comp'),
 ]

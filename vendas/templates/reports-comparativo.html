@@ -1,0 +1,129 @@
+{% extends 'template.html' %}
+{% load static %}
+
+{% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
+{% block title %}Relatórios{% endblock %}
+{% block navbar %}Relatórios{% endblock %}
+
+{% comment %} BLOCO HEAD {% endcomment %}
+{% block head %}
+{% endblock %}
+
+{% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
+{% block body %}
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-primary mb-3">
+                <div class="card-header">Filtros</div>
+                <div class="card-body text-primary">
+                    <form action="#" method="post">
+                        <div class="row">
+                            <div class="col-3">
+                                <label for="ano_anterior" class="text-secondary">Ano anterior</label>
+                            </div>
+                            <div class="col-3">
+                                <label for="mes_anterior" class="text-secondary">Mês anterior</label>
+                            </div>
+                            <div class="col-3">
+                                <label for="ano_atual" class="text-secondary">Ano atual</label>
+                            </div>
+                            <div class="col-3">
+                                <label for="mes_atual" class="text-secondary">Mês atual</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <select name="ano_anterior" id="ano_anterior" class="form-control">
+                                        <option value="2017">2017</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <select name="mes_anterior" id="mes_anterior" class="form-control">
+                                        <option value="1">01</option>
+                                        <option value="2">02</option>
+                                        <option value="3">03</option>
+                                        <option value="4">04</option>
+                                        <option value="5">05</option>
+                                        <option value="6">06</option>
+                                        <option value="7">07</option>
+                                        <option value="8">08</option>
+                                        <option value="9">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <select name="ano_atual" id="ano_atual" class="form-control">
+                                        <option value="2017">2017</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <select name="mes_atual" id="mes_atual" class="form-control">
+                                        <option value="1">01</option>
+                                        <option value="2">02</option>
+                                        <option value="3">03</option>
+                                        <option value="4">04</option>
+                                        <option value="5">05</option>
+                                        <option value="6">06</option>
+                                        <option value="7">07</option>
+                                        <option value="8">08</option>
+                                        <option value="9">09</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                       
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="myChart"></canvas>
+{% endblock %}
+
+{% comment %} BLOCO DE SCPRITS {% endcomment %}
+{% block script %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [{
+                    label: 'My First dataset',
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [0, 10, 5, 2, 20, 30, 45]
+                }]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    </script>
+{% endblock %}

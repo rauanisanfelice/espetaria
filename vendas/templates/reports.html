@@ -3,6 +3,7 @@
 
 {% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
 {% block title %}Relatórios{% endblock %}
+{% block navbar %}Relatórios{% endblock %}
 
 {% comment %} BLOCO HEAD {% endcomment %}
 {% block head %}
@@ -10,7 +11,10 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
-    <h1>Relatórios</h1>
+    <ul class="menu-home">
+        <li><a class="icon-relatorios" href="{% url 'reports_hist' %}">Histórico</a></li>
+        <li><a class="icon-relatorios" href="{% url 'reports_comp' %}">Comparativo</a></li>
+    </ul>
 {% endblock %}
 
 {% comment %} BLOCO DE SCPRITS {% endcomment %}
