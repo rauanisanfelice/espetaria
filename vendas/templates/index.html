@@ -2,7 +2,8 @@
 {% load static %}
 
 {% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
-{% block title %}{% endblock %}
+{% block title %}Inicio{% endblock %}
+{% block navbar %}Inicio{% endblock %}
 
 {% comment %} BLOCO HEAD {% endcomment %}
 {% block head %}
@@ -10,9 +11,6 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-warning center-text">
-        <span class="navbar-title">Inicio</span>
-    </nav>
     <ul class="menu-home">
         <li><a class="icon-mesas" href="{% url 'mesa_list' %}">Mesas</a></li>
         <li><a class="icon-produtos" href="{% url 'produto_list' %}">Produtos</a></li>

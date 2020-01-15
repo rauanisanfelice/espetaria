@@ -11,40 +11,42 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
-    <a href="{% url 'mesa_new' %}">Nova mesa</a>
+    <div class="row">
+        <div class="col-12">
+            {% if erro %}
+                <br><div class="row justify-content-center">
+                    <div class="alert alert-danger" role="alert">
+                        {{ menssagem_erro }}
+                    </div>
+                </div>
+            {% endif %}
 
-    {% if erro %}
-        <br><div class="row justify-content-center">
-            <div class="alert alert-danger" role="alert">
-                {{ menssagem_erro }}
-            </div>
+            {% if succes %}
+                <br><div class="row justify-content-center">
+                    <div class="alert alert-success" role="alert">
+                        {{ menssagem_succes }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Descrição</th>
+                        <th scope="col" class="text-center"><a href="{% url 'mesa_new' %}"><i class="fa fa-plus" aria-hidden="true"></i></a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mesa in mesas %}
+                        <tr scope="row">
+                            <td>{{ mesa.apelido }}</td>
+                            <td class="text-center"><a href="{% url 'mesa_detail' mesa.id %}"><i class="fa fa-pencil" aria-hidden="true"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    {% endif %}
-
-    {% if succes %}
-        <br><div class="row justify-content-center">
-            <div class="alert alert-success" role="alert">
-                {{ menssagem_succes }}
-            </div>
-        </div>
-    {% endif %}
-
-    <table class="table table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Apelido</th>
-                <th scope="col">#</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for mesa in mesas %}
-                <tr scope="row">
-                    <td>{{ mesa.apelido }}</td>
-                    <td><a href="{% url 'mesa_detail' mesa.id %}">+</a></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    </div>
 
 {% endblock %}
 

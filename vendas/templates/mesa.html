@@ -11,32 +11,47 @@
 
 {% comment %} BLOCO DO CORPO DO HTML {% endcomment %}
 {% block body %}
+
     {% if mesa %}
-        <strong>Responsável:</strong> {{ mesa.apelido }}
+
+        <div class="row">
+            <div class="col-12">
+                <strong>Responsável:</strong> {{ mesa.apelido }}
+            </div>
+        </div>
+        <br>
 
         {% comment %} LISTA PRODUTOS {% endcomment %}
-        <table class="table table-hover table-sm">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">Produto</th>
-                    <th scope="col">Quantidade</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for produto_mesa in produtos_mesa %}
-                    <tr scope="row">
-                        <td>{{ produto_mesa.produto__descricao }}</td>
-                        <td>{{ produto_mesa.total }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Produto</th>
+                                <th scope="col">Quantidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for produto_mesa in produtos_mesa %}
+                                <tr scope="row">
+                                    <td>{{ produto_mesa.produto__descricao }}</td>
+                                    <td>{{ produto_mesa.total }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <br>
         <div class="row justify-content-center">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#meuModal">Novo Produto</button>
-
-            <a href="{% url 'mesa_end' mesa.id %}" class="btn btn-danger">Encerrar</a>
+            <div class="col-3">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#meuModal">Novo Produto</button>
+            </div>
+            <div class="col-3" style="margin-left: 20px;">
+                <a href="{% url 'mesa_end' mesa.id %}" class="btn btn-danger">Encerrar</a>
+            </div>
         </div>
 
         <!-- Modal -->
@@ -123,6 +138,10 @@
                     'id_mesa': id_mesa,
                     'id_produto': id_produto,
                     'quantidade': quantidade,
+                },
+                success: function (data){
+                    $('#meuModal').modal('hide');
+                    location.reload();
                 }
             });
         }
