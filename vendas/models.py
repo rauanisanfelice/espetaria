@@ -8,6 +8,7 @@ class Produto(models.Model):
 
 class Mesa(models.Model):
     apelido = models.CharField(max_length=50)
+    ativo = models.BooleanField(null=False, default=True)
     data_encerramento = models.DateTimeField(null=True)
     produtos = models.ManyToManyField(Produto, related_name='mesa_produtos')
 
