@@ -1,13 +1,24 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404
 from django.views.generic import View
-from django.db.models import Sum
+
+from django.db.models import Sum, Max
+from django.db.models.functions import TruncMonth, TruncYear
+
+from django.forms.models import model_to_dict
 
 from .models import Produto, Mesa, Venda
 from datetime import datetime
 
 import json
 import psycopg2
+
+# VARIAVEIS DO VAREJISTA
+host = 'localhost'
+dbname = 'postgres'
+port = '5432'
+username = 'postgres'
+password = 'docker123'
 
 class index(View):
     retorno = 'index.html'
@@ -84,13 +95,6 @@ class MesaEnd(View):
     retorno = 'mesa-end.html'
     def get(self, request, id_mesa):
         try:
-            # VARIAVEIS DO VAREJISTA
-            host = 'localhost'
-            dbname = 'postgres'
-            port = '5432'
-            username = 'postgres'
-            password = 'docker123'
-
             # Acesar o banco
             conn = psycopg2.connect(host=host, dbname=dbname, user=username, password=password, port=port)
             cur = conn.cursor()
@@ -291,8 +295,62 @@ class Reports(View):
 class Reports_hist(View):
     retorno = 'reports-hist.html'
     def get(self, request):
-        return render(request, self.retorno)
+        produtos = Produto.objects.values('descricao', 'id').order_by('descricao').distinct('descricao')
+        return render(request, self.retorno,{
+            'produtos': produtos,
+        })
     
+def Dash_hist(request):
+    ano = request.POST.get('ano')
+    id_produto = request.POST.get('id_produto')
+    
+    # qtde_historicamente = Venda.objects.annotate(ano=TruncYear('data_lancamento'), mes=TruncMonth('data_lancamento')).values('ano', 'mes', 'produto__id').annotate(qtde=Sum('quantidade')).values('ano', 'mes', 'produto__id', 'qtde').order_by('mes')
+    # if ano:
+    #     qtde_historicamente = qtde_historicamente.filter(ano__year=ano)
+    # if id_produto:
+    #     qtde_historicamente = qtde_historicamente.filter(produto__id=id_produto)
+    # qtde_historicamente = qtde_historicamente.values('mes', 'qtde')
+
+    prefixo_select = """
+    select
+        EXTRACT(YEAR FROM vv.data_lancamento) as "ANO",
+        EXTRACT(MONTH FROM vv.data_lancamento) as "MÊS",
+        sum(vv.quantidade) as "Volume"
+    from vendas_venda vv
+        inner join vendas_produto vp on vv.produto_id = vp.id 
+    """
+    where_select = ""
+    if ano or id_produto:
+        where_select = " where "
+        if ano:
+            where_select = where_select + "EXTRACT(YEAR FROM vv.data_lancamento) = %s " % (ano)
+            if id_produto:
+                where_select = where_select + " AND vv.produto_id = %s " % (id_produto)
+        else:
+            where_select = where_select + "vv.produto_id = %s " % (id_produto)
+        
+    sufixo_select = """
+        group by
+            EXTRACT(YEAR FROM vv.data_lancamento),
+            EXTRACT(MONTH FROM vv.data_lancamento)
+        order by
+            EXTRACT(YEAR FROM vv.data_lancamento),
+            EXTRACT(MONTH FROM vv.data_lancamento);
+    """
+    select = prefixo_select + where_select + sufixo_select 
+
+    # Acesar o banco
+    conn = psycopg2.connect(host=host, dbname=dbname, user=username, password=password, port=port)
+    cur = conn.cursor()
+
+    cur.execute(select)
+    qtde_historicamente = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return HttpResponse(json.dumps(qtde_historicamente), content_type="application/json")
+
 class Reports_comp(View):
     retorno = 'reports-comparativo.html'
     def get(self, request):

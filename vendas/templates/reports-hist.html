@@ -3,7 +3,7 @@
 
 {% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
 {% block title %}Relatórios{% endblock %}
-{% block navbar %}Relatórios{% endblock %}
+{% block navbar %}Relatório - Histórico{% endblock %}
 
 {% comment %} BLOCO HEAD {% endcomment %}
 {% block head %}
@@ -22,7 +22,8 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="ano" class="text-secondary">Ano</label>
-                                    <select name="ano" id="ano" class="form-control">
+                                    <select name="ano" id="ano" class="form-control" onchange="SelectFiltro()">
+                                        <option value="" select>Selecione</option>
                                         <option value="2017">2017</option>
                                         <option value="2018">2018</option>
                                         <option value="2019">2019</option>
@@ -32,20 +33,12 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="mes" class="text-secondary">Mês</label>
-                                    <select name="mes" id="mes" class="form-control">
-                                        <option value="1">01</option>
-                                        <option value="2">02</option>
-                                        <option value="3">03</option>
-                                        <option value="4">04</option>
-                                        <option value="5">05</option>
-                                        <option value="6">06</option>
-                                        <option value="7">07</option>
-                                        <option value="8">08</option>
-                                        <option value="9">09</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
+                                    <label for="produto" class="text-secondary">Produto</label>
+                                    <select name="produto" id="produto" class="form-control" onchange="SelectFiltro()">
+                                        <option value="" select>Selecione</option>
+                                        {% for produto in produtos %}
+                                            <option value="{{ produto.id }}">{{ produto.descricao }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
@@ -63,25 +56,80 @@
 {% block script %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
-    <script>
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: 'line',
-
-            // The data for our dataset
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [{
-                    label: 'My First dataset',
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    data: [0, 10, 5, 2, 20, 30, 45]
-                }]
-            },
-
-            // Configuration options go here
-            options: {}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            SelectFiltro();
         });
+
+        var meses = [];
+        var valores = [];
+
+        var meses_texto = {
+            1: 'Jan',
+            2: 'Fev',
+            3: 'Mar',
+            4: 'Abr',
+            5: 'Maio',
+            6: 'Jun',
+            7: 'Jul',
+            8: 'Ago',
+            9: 'Set',
+            10: 'Out',
+            11: 'Nov',
+            12: 'Dez',
+        }
+
+        function SelectFiltro(){
+            var ano = document.getElementById('ano').value;
+            var id_produto = document.getElementById('produto').value;
+            BuscaReport(ano, id_produto);
+        }
+        
+        const distinct = (value, index, self) => {
+            return self.indexOf(value) === index;
+        }
+
+        function BuscaReport(ano, id_produto) {
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'dash_hist' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    'ano': ano,
+                    'id_produto': id_produto,
+                },
+                success: function (data){
+                    data.map( result => {
+                        meses.push(meses_texto[result[1]]); // MESES
+                        valores.push(result[2]); // VALORES
+                    });
+                    meses = meses.filter(distinct);
+                    AtualizaGraficoHistorico();
+                }
+            });
+        }
+
+        function AtualizaGraficoHistorico (){
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: meses,
+                    datasets: [{
+                        label: 'Qtde - Histórico por produto',
+                        backgroundColor: 'rgb(255, 255, 10)',
+                        borderColor: 'rgb(255, 255, 10)',
+                        data: valores
+                    }]
+                },
+
+                // Configuration options go here
+                options: {}
+            });
+        }
+
     </script>
 {% endblock %}

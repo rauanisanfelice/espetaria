@@ -24,5 +24,6 @@ urlpatterns = [
     # REPORTS
     path('reports/', Reports.as_view(), name='reports'),
     path('reports-hist/', Reports_hist.as_view(), name='reports_hist'),
+    path('dash-hist/', Dash_hist, name='dash_hist'),
     path('reports-comparativo/', Reports_comp.as_view(), name='reports_comp'),
 ]
