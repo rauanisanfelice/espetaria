@@ -304,13 +304,6 @@ def Dash_hist(request):
     ano = request.POST.get('ano')
     id_produto = request.POST.get('id_produto')
     
-    # qtde_historicamente = Venda.objects.annotate(ano=TruncYear('data_lancamento'), mes=TruncMonth('data_lancamento')).values('ano', 'mes', 'produto__id').annotate(qtde=Sum('quantidade')).values('ano', 'mes', 'produto__id', 'qtde').order_by('mes')
-    # if ano:
-    #     qtde_historicamente = qtde_historicamente.filter(ano__year=ano)
-    # if id_produto:
-    #     qtde_historicamente = qtde_historicamente.filter(produto__id=id_produto)
-    # qtde_historicamente = qtde_historicamente.values('mes', 'qtde')
-
     prefixo_select = """
     select
         EXTRACT(YEAR FROM vv.data_lancamento) as "ANO",
