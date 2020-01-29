@@ -315,6 +315,7 @@ def Dash_hist(request):
     select
         EXTRACT(YEAR FROM vv.data_lancamento) as "ANO",
         EXTRACT(MONTH FROM vv.data_lancamento) as "MÊS",
+        vp.descricao,
         sum(vv.quantidade) as "Volume"
     from vendas_venda vv
         inner join vendas_produto vp on vv.produto_id = vp.id 
@@ -332,10 +333,12 @@ def Dash_hist(request):
     sufixo_select = """
         group by
             EXTRACT(YEAR FROM vv.data_lancamento),
-            EXTRACT(MONTH FROM vv.data_lancamento)
+            EXTRACT(MONTH FROM vv.data_lancamento),
+            vp.descricao
         order by
             EXTRACT(YEAR FROM vv.data_lancamento),
-            EXTRACT(MONTH FROM vv.data_lancamento);
+            EXTRACT(MONTH FROM vv.data_lancamento),
+            vp.descricao;
     """
     select = prefixo_select + where_select + sufixo_select 
 

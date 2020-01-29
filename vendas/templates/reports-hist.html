@@ -63,6 +63,7 @@
 
         var meses = [];
         var valores = [];
+        var datasets = [];
 
         var meses_texto = {
             1: 'Jan',
@@ -82,6 +83,9 @@
         function SelectFiltro(){
             var ano = document.getElementById('ano').value;
             var id_produto = document.getElementById('produto').value;
+            meses = [];
+            valores = [];
+            datasets = [];
             BuscaReport(ano, id_produto);
         }
         
@@ -100,8 +104,40 @@
                 },
                 success: function (data){
                     data.map( result => {
+                        var cor01 = Math.floor(Math.random() * 255);
+                        var cor02 = Math.floor(Math.random() * 255);
+                        var cor03 = Math.floor(Math.random() * 255);
+                        var cor = `rgb(${cor01}, ${cor02}, ${cor03})`;
+
+                        if (datasets.length === 0) {
+                            datasets.push({
+                                label: result[2],
+                                type: "line",
+                                borderColor: cor,
+                                fill: false,
+                                data: [result[3]]
+                            })
+                        } else {
+                            var index = -1;
+                            var filteredObj = datasets.find(function(item, i){
+                                if(item.label === result[2]){
+                                    index = i;
+                                    return i;
+                                }
+                            });
+                            if (index != '-1'){
+                                datasets[index].data.push(result[3]);
+                            } else {
+                                datasets.push({
+                                    label: result[2],
+                                    type: "line",
+                                    borderColor: cor,
+                                    fill: false,
+                                    data: [result[3]]
+                                })
+                            }
+                        }
                         meses.push(meses_texto[result[1]]); // MESES
-                        valores.push(result[2]); // VALORES
                     });
                     meses = meses.filter(distinct);
                     AtualizaGraficoHistorico();
@@ -114,20 +150,22 @@
             var chart = new Chart(ctx, {
                 // The type of chart we want to create
                 type: 'line',
-
                 // The data for our dataset
                 data: {
                     labels: meses,
-                    datasets: [{
-                        label: 'Qtde - Histórico por produto',
-                        backgroundColor: 'rgb(255, 255, 10)',
-                        borderColor: 'rgb(255, 255, 10)',
-                        data: valores
-                    }]
+                    datasets: datasets
                 },
 
                 // Configuration options go here
-                options: {}
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Qtde - Histórico por produto'
+                    },
+                    legend: {
+                        display: true
+                    }
+                }
             });
         }
 
