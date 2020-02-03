@@ -24,6 +24,8 @@ urlpatterns = [
     # REPORTS
     path('reports/', Reports.as_view(), name='reports'),
     path('reports-hist/', Reports_hist.as_view(), name='reports_hist'),
-    path('dash-hist/', Dash_hist, name='dash_hist'),
+    path('dash-hist/', Dash_Historico, name='dash_hist'),
+
     path('reports-comparativo/', Reports_comp.as_view(), name='reports_comp'),
+    path('dash-comp-pizza/', Dash_Comparativo_Pizza, name='dash_comp_pizza'),
 ]

@@ -35,7 +35,8 @@
                         <div class="row">
                             <div class="col-3">
                                 <div class="form-group">
-                                    <select name="ano_anterior" id="ano_anterior" class="form-control">
+                                    <select name="ano_anterior" id="ano_anterior" class="form-control" onchange="SelectFiltroAnterior()">
+                                        <option value="" selected>Selecione</option>
                                         <option value="2017">2017</option>
                                         <option value="2018">2018</option>
                                         <option value="2019">2019</option>
@@ -45,7 +46,8 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <select name="mes_anterior" id="mes_anterior" class="form-control">
+                                    <select name="mes_anterior" id="mes_anterior" class="form-control" onchange="SelectFiltroAnterior()">
+                                        <option value="" selected>Selecione</option>
                                         <option value="1">01</option>
                                         <option value="2">02</option>
                                         <option value="3">03</option>
@@ -63,7 +65,8 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <select name="ano_atual" id="ano_atual" class="form-control">
+                                    <select name="ano_atual" id="ano_atual" class="form-control" onchange="SelectFiltroAtual()">
+                                        <option value="" selected>Selecione</option>
                                         <option value="2017">2017</option>
                                         <option value="2018">2018</option>
                                         <option value="2019">2019</option>
@@ -73,7 +76,8 @@
                             </div>
                             <div class="col-3">
                                 <div class="form-group">
-                                    <select name="mes_atual" id="mes_atual" class="form-control">
+                                    <select name="mes_atual" id="mes_atual" class="form-control" onchange="SelectFiltroAtual()">
+                                        <option value="" selected>Selecione</option>
                                         <option value="1">01</option>
                                         <option value="2">02</option>
                                         <option value="3">03</option>
@@ -98,32 +102,108 @@
         </div>
     </div>
 
-    <canvas id="myChart"></canvas>
+    <!-- GRAFICO DE PIZZA -->
+    <div class="row justify-content-center">
+        <h4>Gráfico de produtos</h4>
+    </div>
+    <hr>
+
+    <div class="row justify-content-center" style="margin-bottom: 20px;">
+        <div class="col-6 linha-vertical">
+            <canvas id="ChartProdutosAnterior"></canvas>
+        </div>
+        <div class="col-6">
+            <canvas id="ChartProdutosAtual"></canvas>
+        </div>
+    </div>
+
+
 {% endblock %}
 
 {% comment %} BLOCO DE SCPRITS {% endcomment %}
 {% block script %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-
     <script>
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var chart = new Chart(ctx, {
-            // The type of chart we want to create
-            type: 'line',
+        var datasets = [];
+        var meses_texto = {
+            1: 'Jan',
+            2: 'Fev',
+            3: 'Mar',
+            4: 'Abr',
+            5: 'Maio',
+            6: 'Jun',
+            7: 'Jul',
+            8: 'Ago',
+            9: 'Set',
+            10: 'Out',
+            11: 'Nov',
+            12: 'Dez',
+        }
 
-            // The data for our dataset
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [{
-                    label: 'My First dataset',
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    data: [0, 10, 5, 2, 20, 30, 45]
-                }]
-            },
+        function SelectFiltroAnterior(){
+            var ano = document.getElementById('ano_anterior').value;
+            var mes = document.getElementById('mes_anterior').value;
+            MontaDadosPizza(ano, mes);
+            MontaGraficoPizza('ChartProdutosAnterior');
+        }
 
-            // Configuration options go here
-            options: {}
-        });
+        function SelectFiltroAtual(){
+            var ano = document.getElementById('ano_atual').value;
+            var mes = document.getElementById('mes_atual').value;
+            MontaDadosPizza(ano, mes);
+            MontaGraficoPizza('ChartProdutosAtual');
+        }
+
+        function MontaDadosPizza(ano, mes){
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'dash_comp_pizza' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    'ano': ano,
+                    'mes': mes,
+                },
+                success: function (data){
+                    data.map( result => {
+                        var cor01 = Math.floor(Math.random() * 255);
+                        var cor02 = Math.floor(Math.random() * 255);
+                        var cor03 = Math.floor(Math.random() * 255);
+                        var cor = `rgb(${cor01}, ${cor02}, ${cor03})`;
+                        console.log(datasets);
+                        if (datasets.length === 0) {
+                            datasets.push({
+                                label: [result[0]],
+                                backgroundColor: [cor],
+                                data: [result[1]]
+                            })
+                        } else {
+                            console.log(datasets.label)
+                            datasets.label.push(result[0]);
+                            datasets.data.push(result[1]);
+                            datasets.backgroundColor.push(cor);
+                        }
+                    });  
+                }
+            });
+        }
+
+        function MontaGraficoPizza(grafico){
+            var ctx01 = document.getElementById(grafico).getContext('2d');
+            var chart01 = new Chart(ctx01, {
+                type: 'pie',
+                data: {
+                    labels: 'Volume',
+                    datasets: datasets
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Volume por produto'
+                    },
+                    responsive: true
+                }
+            });
+        }
+        
     </script>
 {% endblock %}

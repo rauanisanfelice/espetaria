@@ -300,7 +300,7 @@ class Reports_hist(View):
             'produtos': produtos,
         })
     
-def Dash_hist(request):
+def Dash_Historico(request):
     ano = request.POST.get('ano')
     id_produto = request.POST.get('id_produto')
     
@@ -332,6 +332,42 @@ def Dash_hist(request):
             EXTRACT(YEAR FROM vv.data_lancamento),
             EXTRACT(MONTH FROM vv.data_lancamento),
             vp.descricao;
+    """
+    select = prefixo_select + where_select + sufixo_select 
+
+    # Acesar o banco
+    conn = psycopg2.connect(host=host, dbname=dbname, user=username, password=password, port=port)
+    cur = conn.cursor()
+
+    cur.execute(select)
+    qtde_historicamente = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return HttpResponse(json.dumps(qtde_historicamente), content_type="application/json")
+
+def Dash_Comparativo_Pizza(request):
+    ano = request.POST.get('ano')
+    mes = request.POST.get('mes')
+    
+    prefixo_select = """
+    select vp.descricao, sum(vv.quantidade) as "Volume"
+    from vendas_venda vv inner join vendas_produto vp on vv.produto_id = vp.id 
+    """
+    where_select = ""
+    if ano or mes:
+        where_select = " where "
+        if ano:
+            where_select = where_select + "EXTRACT(YEAR FROM vv.data_lancamento) = %s " % (ano)
+            if mes:
+                where_select = where_select + " AND EXTRACT(MONTH FROM vv.data_lancamento) = %s " % (mes)
+        else:
+            where_select = where_select + "EXTRACT(MONTH FROM vv.data_lancamento) = %s " % (mes)
+        
+    sufixo_select = """
+        group by vp.descricao
+        order by 2 desc;
     """
     select = prefixo_select + where_select + sufixo_select 
 

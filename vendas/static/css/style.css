@@ -86,4 +86,8 @@ body{
   padding: 0.25em 0.8em;
 }
 
+.linha-vertical {
+  height: 500px;
+  border-right: 1px solid lightgrey
+}
 
