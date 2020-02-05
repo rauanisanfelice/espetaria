@@ -380,7 +380,7 @@ def Dash_Comparativo_Pizza(request):
 
     cur.close()
     conn.close()
-
+    
     return HttpResponse(json.dumps(qtde_historicamente), content_type="application/json")
 
 class Reports_comp(View):

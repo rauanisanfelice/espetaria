@@ -110,7 +110,7 @@
 
     <div class="row justify-content-center" style="margin-bottom: 20px;">
         <div class="col-6 linha-vertical">
-            <canvas id="ChartProdutosAnterior"></canvas>
+            <canvas id="ChartProdutosAnterior" width="50px" height="50px"></canvas>
         </div>
         <div class="col-6">
             <canvas id="ChartProdutosAtual"></canvas>
@@ -124,7 +124,10 @@
 {% block script %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script>
-        var datasets = [];
+        var dataset = [];
+        var backgroundColor = [];
+        var label = [];
+
         var meses_texto = {
             1: 'Jan',
             2: 'Fev',
@@ -143,6 +146,9 @@
         function SelectFiltroAnterior(){
             var ano = document.getElementById('ano_anterior').value;
             var mes = document.getElementById('mes_anterior').value;
+            dataset = [];
+            label = [];
+            backgroundColor = [];
             MontaDadosPizza(ano, mes);
             MontaGraficoPizza('ChartProdutosAnterior');
         }
@@ -150,6 +156,9 @@
         function SelectFiltroAtual(){
             var ano = document.getElementById('ano_atual').value;
             var mes = document.getElementById('mes_atual').value;
+            dataset = [];
+            label = [];
+            backgroundColor = [];
             MontaDadosPizza(ano, mes);
             MontaGraficoPizza('ChartProdutosAtual');
         }
@@ -163,37 +172,34 @@
                     'ano': ano,
                     'mes': mes,
                 },
-                success: function (data){
+                success: function (data){               
                     data.map( result => {
                         var cor01 = Math.floor(Math.random() * 255);
                         var cor02 = Math.floor(Math.random() * 255);
                         var cor03 = Math.floor(Math.random() * 255);
                         var cor = `rgb(${cor01}, ${cor02}, ${cor03})`;
-                        console.log(datasets);
-                        if (datasets.length === 0) {
-                            datasets.push({
-                                label: [result[0]],
-                                backgroundColor: [cor],
-                                data: [result[1]]
-                            })
-                        } else {
-                            console.log(datasets.label)
-                            datasets.label.push(result[0]);
-                            datasets.data.push(result[1]);
-                            datasets.backgroundColor.push(cor);
-                        }
+                        
+                        label.push(result[0]);
+                        dataset.push(result[1]);
+                        backgroundColor.push(cor);
                     });  
                 }
             });
         }
 
-        function MontaGraficoPizza(grafico){
-            var ctx01 = document.getElementById(grafico).getContext('2d');
-            var chart01 = new Chart(ctx01, {
+        async function MontaGraficoPizza(grafico){
+            var ctx01 = document.getElementById(grafico).getContext('2d');          
+            var chart01 = await new Chart(ctx01, {
                 type: 'pie',
                 data: {
-                    labels: 'Volume',
-                    datasets: datasets
+                    labels: label,
+                    datasets: [
+                        {
+                            "label": "DataSets",
+                            "data": dataset,
+                            "backgroundColor": backgroundColor
+                        }
+                    ]
                 },
                 options: {
                     title: {
