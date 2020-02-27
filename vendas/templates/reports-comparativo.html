@@ -110,10 +110,10 @@
 
     <div class="row justify-content-center" style="margin-bottom: 20px;">
         <div class="col-6 linha-vertical">
-            <canvas id="ChartProdutosAnterior" width="50px" height="50px"></canvas>
+            <canvas id="ChartProdutosAnterior" style="position: relative; height: 400px; width:100%;"></canvas>
         </div>
         <div class="col-6">
-            <canvas id="ChartProdutosAtual"></canvas>
+            <canvas id="ChartProdutosAtual" style="position: relative; height: 400px; width:100%;"></canvas>
         </div>
     </div>
 
@@ -146,21 +146,49 @@
         function SelectFiltroAnterior(){
             var ano = document.getElementById('ano_anterior').value;
             var mes = document.getElementById('mes_anterior').value;
-            dataset = [];
             label = [];
+            dataset = [];
             backgroundColor = [];
             MontaDadosPizza(ano, mes);
-            MontaGraficoPizza('ChartProdutosAnterior');
+
+            var ctx = document.getElementById('ChartProdutosAnterior').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'pie',
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Volume por produto'
+                    },
+                    responsive: true
+                }
+            });
+
+            MontaGraficoPizza(chart);
         }
 
         function SelectFiltroAtual(){
             var ano = document.getElementById('ano_atual').value;
             var mes = document.getElementById('mes_atual').value;
-            dataset = [];
             label = [];
+            dataset = [];
             backgroundColor = [];
             MontaDadosPizza(ano, mes);
-            MontaGraficoPizza('ChartProdutosAtual');
+            
+            var ctx = document.getElementById('ChartProdutosAtual').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'pie',
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Volume por produto'
+                    },
+                    responsive: true
+                }
+            });
+
+            MontaGraficoPizza(chart);
+            console.log(chart);
+            chart.update();
         }
 
         function MontaDadosPizza(ano, mes){
@@ -187,28 +215,12 @@
             });
         }
 
-        async function MontaGraficoPizza(grafico){
-            var ctx01 = document.getElementById(grafico).getContext('2d');          
-            var chart01 = await new Chart(ctx01, {
-                type: 'pie',
-                data: {
-                    labels: label,
-                    datasets: [
-                        {
-                            "label": "DataSets",
-                            "data": dataset,
-                            "backgroundColor": backgroundColor
-                        }
-                    ]
-                },
-                options: {
-                    title: {
-                        display: true,
-                        text: 'Volume por produto'
-                    },
-                    responsive: true
-                }
-            });
+        function MontaGraficoPizza(chart){            
+            chart.data.labels = label;
+            chart.data.datasets.label = "DataSets";
+            chart.data.datasets.data = dataset;
+            chart.data.datasets.backgroundColor = backgroundColor;
+            chart.update();
         }
         
     </script>
