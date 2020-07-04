@@ -13,6 +13,9 @@ from datetime import datetime
 import json
 import psycopg2
 
+import logging
+logger = logging.getLogger(__name__)
+
 # VARIAVEIS DO VAREJISTA
 host = 'localhost'
 dbname = 'postgres'
@@ -57,7 +60,8 @@ class MesaNew(View):
                 'menssagem_succes': 'Mesa criada com sucesso!',
             })
 
-        except:
+        except Exception as e:
+            logger.error(f"Erro ao Salvar nova Mesa ({apelido}) - Erro: {e}")
             return render(request, self.retorno, {
                 'erro': 'Erro',
                 'menssagem_erro': 'Erro, tente novamente mais tarde!',
@@ -82,7 +86,8 @@ def MesaAddProduto(request):
             'menssagem_succes': 'Produto adicionado!',
         }
 
-    except:
+    except Exception as e:
+        logger.error(f"Erro ao salvar detalhes da Mesa ({id_mesa}) - Erro: {e}")
         retorno = {
             'erro': 'Erro',
             'menssagem_erro': 'Erro, tente novamente mais tarde!',
@@ -112,10 +117,10 @@ class MesaEnd(View):
             where vv.mesa_id = %s
             group by vv.mesa_id, vm.apelido, vv.produto_id, vp.descricao
             order by vv.produto_id, vv.mesa_id;
-            """ % id_mesa
+            """
             
             # TOTAL POR PRODUTO
-            cur.execute(select)
+            cur.execute(select, (id_mesa))
             produtos_mesa = cur.fetchall()
             cur.close()
 
@@ -150,7 +155,8 @@ class MesaEnd(View):
                 'total': total,
             })
         
-        except:
+        except Exception as e:
+            logger.error(f"Erro ao buscas dados da Mesa ({id_mesa}) - Erro: {e}")
             return render(request, self.retorno, {
                 'mesa': None,
                 'produtos_mesa': None,
@@ -168,18 +174,19 @@ class MesaEnd(View):
 
 # class MesaDetail(View):
 def MesaDetail(request, id_mesa):
-    retorno = 'mesa.html'
-    produtos_mesa = Venda.objects.all().filter(mesa__id=id_mesa).values('produto__descricao').order_by('produto__descricao').annotate(total=Sum('quantidade'))
-    mesa = Mesa.objects.get(id=int(id_mesa))
-    produtos = Produto.objects.all()
     try:
+        retorno = 'mesa.html'
+        produtos_mesa = Venda.objects.all().filter(mesa__id=id_mesa).values('produto__descricao').order_by('produto__descricao').annotate(total=Sum('quantidade'))
+        mesa = Mesa.objects.get(id=int(id_mesa))
+        produtos = Produto.objects.all()
 
         return render(request, retorno, {
             'mesa': mesa,
             'produtos': produtos,
             'produtos_mesa': produtos_mesa,
         })
-    except:
+    except Exception as e:
+        logger.error(f"Erro ao buscas detalhes da Mesa ({id_mesa}) - Erro: {e}")
         return render(request, retorno, {
             'mesa': None,
             'produtos': None,
@@ -226,7 +233,8 @@ class ProdutoNew(View):
                 'menssagem_succes': 'Produto cadastrado com sucesso!',
             })
 
-        except:
+        except Exception as e:
+            logger.error(f"Erro ao salvar novo Produto ({descricao}) - Erro: {e}")
             return render(request, self.retorno, {
                 'erro': 'Erro',
                 'menssagem_erro': 'Erro, tente novamente mais tarde!',
@@ -247,7 +255,8 @@ def ProdutoDell(request, id_produto):
             'produtos': produtos,
         })
 
-    except:
+    except Exception as e:
+        logger.error(f"Erro ao salvar deletar Produto ({id_produto}) - Erro: {e}")
         return render(request, retorno, {
             'erro': 'Erro',
             'menssagem_erro': 'Erro, tente novamente mais tarde!',
@@ -276,7 +285,8 @@ class ProdutoEdit(View):
                 'produto': produto,
             })
 
-        except:
+        except Exception as e:
+            logger.error(f"Erro ao buscar detalhes Produto ({id_produto}) - Erro: {e}")
             
             produto = get_object_or_404(Produto, pk=id_produto)
             return render(request, self.retorno, {
