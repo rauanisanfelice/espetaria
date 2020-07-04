@@ -9,6 +9,7 @@ from django.forms.models import model_to_dict
 
 from .models import Produto, Mesa, Venda
 from datetime import datetime
+from decouple import config
 
 import json
 import psycopg2
@@ -17,11 +18,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 # VARIAVEIS DO VAREJISTA
-host = 'localhost'
-dbname = 'postgres'
-port = '5432'
-username = 'postgres'
-password = 'docker123'
+dbname = config('DB_NAME')
+username = config('DB_USER')
+password = config('DB_PASS')
+host = config('DB_HOST')
+port = config('DB_PORT')
 
 class index(View):
     retorno = 'index.html'

@@ -1,0 +1,8 @@
+SECRET_KEY=''
+DEBUG=True
+
+NAME=postgres
+USER=postgres
+PASSWORD=docker123
+HOST=localhost
+PORT=5432

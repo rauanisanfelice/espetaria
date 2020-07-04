@@ -17,9 +17,10 @@ Sistema de controle de saídas de espetinhos.
 
 1. Ambiente Python;
 2. Instalando dependências;
-3. Inicialização dos container;
+3. Criando arquivo .env;
+4. Inicialização dos container;
     1. Configurando o pgAdmin;
-4. Iniciar o servidor.
+5. Iniciar o servidor.
 
 ### Ambiente Python:
 
@@ -32,6 +33,10 @@ source env/bin/activate
 ```
 pip3 install -r requirements.txt
 ```
+
+### Criando arquivo .env;
+
+Copie o conteúdo do arquivo .env-example e crie um novo arquivo .env, cole o conteúdo e altere as variáveis
 
 ### Inicialização dos container
 
