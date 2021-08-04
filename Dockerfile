@@ -17,7 +17,7 @@ WORKDIR /app
 COPY /app /app
 
 # STATIC FILES
-RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --clear --noinput
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "espetaria.wsgi", "--reload"]
