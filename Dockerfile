@@ -16,7 +16,7 @@ RUN python -m pip install -r requirements.txt
 WORKDIR /app
 COPY /app /app
 
-# RUN python manage.py migrate --noinput
+# STATIC FILES
 RUN python manage.py collectstatic --noinput
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug

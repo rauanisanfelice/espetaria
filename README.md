@@ -17,7 +17,8 @@ Sistema de controle de saídas de espetinhos.
 
 1. Criando arquivo .env;
 2. Iniciando docker;
-3. Realizando migrate.
+3. Realizando migrate;
+4. Criando arquivo de log.
 
 ### Criando arquivo .env
 
@@ -35,6 +36,12 @@ docker-compose up -d
 
 ```shell
 docker-compose exec app python manage.py migrate --noinput
+```
+
+### Criando arquivo de log
+
+```shell
+mkdir -p ./app/logs && touch ./app/logs/debug.log
 ```
 
 [Site](http://localhost:8000)
