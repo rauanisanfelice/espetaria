@@ -15,25 +15,9 @@ Sistema de controle de saídas de espetinhos.
 
 ## Instalação
 
-1. Ambiente Python;
-2. Instalando dependências;
-3. Criando arquivo .env;
-4. Inicialização dos container;
-    1. Configurando o pgAdmin;
-5. Iniciar o servidor.
-
-### Ambiente Python
-
-```shell
-virtualenv -p python3 env
-source env/bin/activate
-```
-
-### Instalando dependências
-
-```shell
-pip3 install -r requirements.txt
-```
+1. Criando arquivo .env;
+2. Iniciando docker;
+3. Realizando migrate.
 
 ### Criando arquivo .env
 
@@ -41,38 +25,16 @@ pip3 install -r requirements.txt
 sudo mv .env.dist .env
 ```
 
-### Inicialização dos container
+### Iniciando docker
 
 ```shell
 docker-compose up -d
 ```
 
-#### Configurando o pgAdmin
-
-Acesse o link:
-
-[pgAdmin](http://localhost:80)
-
-Realize o login:
->User: admin
->Pass: admin
-
-Clique em: Create >> Server
-
-Conecte no Banco com os seguintes parametros:
-
-Name: #nome desejado#
->Host: espetaria-postgre
->Port: 5432
->DB  : postgres
->User: postgres
->Pass: docker123
-
-### Iniciar o servidor
+### Realizando migrate e collectstatic
 
 ```shell
-python manage.py migrate
-python manage.py runserver 8000 --noreload
+docker-compose exec app python manage.py migrate --noinput
 ```
 
 [Site](http://localhost:8000)
