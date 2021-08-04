@@ -19,8 +19,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Create Folder and File Log
       run: |
-        mkdir -p /app/logs
-        touch /app/logs/debug.log
+        mkdir -p ./app/logs
+        touch ./app/logs/debug.log
       shell: bash
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
