@@ -9,10 +9,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
+SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG')
+DEBUG = os.environ.get('DEBUG', default=False)
 
 ADMINS = [
     ('Rauan Ishida', 'rauanishida@squads.tec.br'),
@@ -28,13 +28,13 @@ SESSION_COOKIE_SECURE=False
 
 # Application definition
 INSTALLED_APPS = [
-    'vendas',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'vendas',
     'bootstrap4',
 ]
 
@@ -124,13 +124,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfile')
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    './static/'
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 
