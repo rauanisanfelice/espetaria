@@ -1,5 +1,6 @@
 {% extends 'template.html' %}
 {% load static %}
+{% load bootstrap4 %}
 
 {% comment %} BLOCO DE TITULO DO SITE {% endcomment %}
 {% block title %}Novo Produto{% endblock %}
@@ -14,7 +15,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                
+
                 {% if erro %}
                     <br><div class="row justify-content-center">
                         <div class="alert alert-danger" role="alert">
@@ -22,7 +23,7 @@
                         </div>
                     </div>
                 {% endif %}
-                
+
                 {% if succes %}
                     <br><div class="row justify-content-center">
                         <div class="alert alert-success" role="alert">
@@ -32,18 +33,13 @@
                 {% endif %}
 
                 <form action="." method="post">{% csrf_token %}
-                    <div class="form-group">
-                        <label for="produto">Nome</label>
-                        <input type="text" class="form-control" name="produto" id="produto">
-                    </div>
+                    {% bootstrap_form form %}
 
-                    <div class="form-group">
-                        <label for="valorUnit">Valor</label>
-                        <input type="number" step="any" class="form-control" name="valorUnit" id="valorUnit">
-                    </div>
+                    {% buttons %}
                     <div class="row justify-content-center">
                         <input type="submit" class="btn btn-primary" value="Cadastrar">
                     </div>
+                    {% endbuttons %}
                 </form>
             </div>
         </div>

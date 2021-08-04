@@ -6,6 +6,9 @@ class Produto(models.Model):
     data_insercao = models.DateField(auto_now_add=True)
     status = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.descricao
+
 class Mesa(models.Model):
     apelido = models.CharField(max_length=50)
     ativo = models.BooleanField(null=False, default=True)

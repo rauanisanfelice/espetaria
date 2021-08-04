@@ -1,14 +1,13 @@
+from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.views.generic import View
 from django.conf import settings
-
-from django.db.models import Sum, Max
-from django.db.models.functions import TruncMonth, TruncYear
-
-from django.forms.models import model_to_dict
+from django.db.models import Sum
+from django.views.generic import View, CreateView, DeleteView, UpdateView
 
 from .models import Produto, Mesa, Venda
+from .forms import ProdutoForm
 from datetime import datetime
 
 import json
@@ -35,7 +34,7 @@ class Index(View):
     def get(self, request):
         return render(request, self.retorno)
 
-############################################
+
 ############################################
 class MesaList(View):
 
@@ -219,7 +218,6 @@ def MesaDetail(request, id_mesa):
 
 
 ############################################
-############################################
 class ProdutoList(View):
     retorno = 'produto-list.html'
 
@@ -231,50 +229,17 @@ class ProdutoList(View):
         produtos = Produto.objects.all().filter(status=True)
         return render(request, self.retorno, { 'produtos': produtos })
 
-class ProdutoNew(View):
 
-    retorno = 'produto-new.html'
+class ProdutoNew(CreateView):
+
+    model = Produto
+    form_class = ProdutoForm
+    template_name = 'produto-new.html'
+    success_url = reverse_lazy('produto_list')
 
     def dispatch(self, request, *args, **kwargs):
         logger.info(f"ProdutoNew {request.method}")
         return super().dispatch(request, *args, **kwargs)
-
-    def get(self, request):
-        return render(request, self.retorno)
-
-    def post(self, request):
-        descricao = request.POST.get('produto')
-        valorUnit = request.POST.get('valorUnit')
-
-        # VERIFICA SE DESCRICAO FOI PREENCHIDO
-        if not descricao:
-            return render(request, self.retorno, {
-                'erro': 'Erro',
-                'menssagem_erro': 'Campo descrição vazio!',
-            })
-
-        # VERIFICA SE VALOR FOI PREENCHIDO
-        if not valorUnit:
-            return render(request, self.retorno, {
-                'erro': 'Erro',
-                'menssagem_erro': 'Campo valor unitário vazio!',
-            })
-
-        # TENTA SALVAR NOVO PRODUTO
-        try:
-            modelProduto = Produto(descricao=descricao, valor_unid=valorUnit)
-            modelProduto.save()
-            return render(request, self.retorno, {
-                'succes': 'ok',
-                'menssagem_succes': 'Produto cadastrado com sucesso!',
-            })
-
-        except Exception as e:
-            logger.error(f"Erro ao salvar novo Produto ({descricao}) - Erro: {e}")
-            return render(request, self.retorno, {
-                'erro': 'Erro',
-                'menssagem_erro': 'Erro, tente novamente mais tarde!',
-            })
 
 
 def ProdutoDell(request, id_produto):
@@ -338,7 +303,6 @@ class ProdutoEdit(View):
             })
 
 
-############################################
 ############################################
 class Reports(View):
 
