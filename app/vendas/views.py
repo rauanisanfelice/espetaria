@@ -24,21 +24,38 @@ password = settings.DATABASES.get('DB_PASS')
 host = settings.DATABASES.get('DB_HOST')
 port = settings.DATABASES.get('DB_PORT')
 
-class index(View):
+class Index(View):
+
     retorno = 'index.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"Index {request.method}")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         return render(request, self.retorno)
 
 ############################################
 ############################################
 class MesaList(View):
+
     retorno = 'mesa-list.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"MesaList {request.method}")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         mesas = Mesa.objects.all().filter(data_encerramento=None)
         return render(request, self.retorno, { 'mesas': mesas })
 
 class MesaNew(View):
     retorno = 'mesa-new.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"MesaNew {request.method}")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         return render(request, self.retorno)
 
@@ -69,6 +86,7 @@ class MesaNew(View):
             })
 
 def MesaAddProduto(request):
+
     retorno = ""
     id_mesa = request.POST.get('id_mesa')
     id_produto = request.POST.get('id_produto')
@@ -99,6 +117,11 @@ def MesaAddProduto(request):
 
 class MesaEnd(View):
     retorno = 'mesa-end.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"MesaEnd {request.method}")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request, id_mesa):
         try:
             # Acesar o banco
@@ -175,6 +198,7 @@ class MesaEnd(View):
 
 # class MesaDetail(View):
 def MesaDetail(request, id_mesa):
+
     try:
         retorno = 'mesa.html'
         produtos_mesa = Venda.objects.all().filter(mesa__id=id_mesa).values('produto__descricao').order_by('produto__descricao').annotate(total=Sum('quantidade'))
@@ -198,12 +222,23 @@ def MesaDetail(request, id_mesa):
 ############################################
 class ProdutoList(View):
     retorno = 'produto-list.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"ProdutoList {request.method}")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         produtos = Produto.objects.all().filter(status=True)
         return render(request, self.retorno, { 'produtos': produtos })
 
 class ProdutoNew(View):
+
     retorno = 'produto-new.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"ProdutoNew {request.method}")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         return render(request, self.retorno)
 
@@ -241,6 +276,7 @@ class ProdutoNew(View):
                 'menssagem_erro': 'Erro, tente novamente mais tarde!',
             })
 
+
 def ProdutoDell(request, id_produto):
     retorno = 'produto-list.html'
 
@@ -265,7 +301,12 @@ def ProdutoDell(request, id_produto):
         })
 
 class ProdutoEdit(View):
+
     retorno = 'produto-edit.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"ProdutoEdit {request.method}")
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, id_produto):
         produto = get_object_or_404(Produto, pk=id_produto)
@@ -296,20 +337,34 @@ class ProdutoEdit(View):
                 'produto': produto,
             })
 
+
 ############################################
 ############################################
 class Reports(View):
+
     retorno = 'reports.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"Reports {request.method}")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         return render(request, self.retorno)
 
 class Reports_hist(View):
+
     retorno = 'reports-hist.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"Reports_hist {request.method}")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         produtos = Produto.objects.values('descricao', 'id').order_by('descricao').distinct('descricao')
         return render(request, self.retorno,{
             'produtos': produtos,
         })
+
 
 def Dash_Historico(request):
     ano = request.POST.get('ano')
@@ -358,6 +413,7 @@ def Dash_Historico(request):
 
     return HttpResponse(json.dumps(qtde_historicamente), content_type="application/json")
 
+
 def Dash_Comparativo_Pizza(request):
     ano = request.POST.get('ano')
     mes = request.POST.get('mes')
@@ -395,6 +451,12 @@ def Dash_Comparativo_Pizza(request):
     return HttpResponse(json.dumps(qtde_historicamente), content_type="application/json")
 
 class Reports_comp(View):
+
     retorno = 'reports-comparativo.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        logger.info(f"Reports_comp {request.method}")
+        return super().dispatch(request, *args, **kwargs)
+
     def get(self, request):
         return render(request, self.retorno)
