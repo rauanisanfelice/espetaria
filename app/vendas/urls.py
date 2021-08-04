@@ -1,12 +1,12 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from .views import *
 
 urlpatterns = [
-    path('', index.as_view(), name='lancamento'),
-    
+    path('', Index.as_view(), name='lancamento'),
+
     # MESAS
     path('mesa-list/', MesaList.as_view(), name='mesa_list'),
     path('mesa-new/', MesaNew.as_view(), name='mesa_new'),
