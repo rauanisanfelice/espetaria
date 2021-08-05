@@ -13,9 +13,10 @@ SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', default=False)
+print(DEBUG)
 
 ADMINS = [
-    ('Rauan Ishida', 'rauanishida@squads.tec.br'),
+    ('Rauan Ishida', ''),
 ]
 MANAGERS = ADMINS
 
@@ -25,6 +26,7 @@ INTERNAL_IPS = [ 'localhost', '127.0.0.1', ]
 CORS_ORIGIN_ALLOW_ALL=DEBUG
 CSRF_COOKIE_SECURE=False
 SESSION_COOKIE_SECURE=False
+SECURE_SSL_REDIRECT=False
 
 # Application definition
 INSTALLED_APPS = [
@@ -125,7 +127,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
 
 
 #############################################################
