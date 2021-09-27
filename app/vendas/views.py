@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.generic import View
 from django.conf import settings
 from django.db.models import Sum
-from django.views.generic import View, CreateView, DeleteView, UpdateView
+from django.views.generic import View, CreateView, DeleteView, UpdateView, ListView
 
 from .models import Produto, Mesa, Venda
 from .forms import ProdutoForm
@@ -83,6 +83,7 @@ class MesaNew(View):
                 'erro': 'Erro',
                 'menssagem_erro': 'Erro, tente novamente mais tarde!',
             })
+
 
 def MesaAddProduto(request):
 
@@ -218,16 +219,21 @@ def MesaDetail(request, id_mesa):
 
 
 ############################################
-class ProdutoList(View):
-    retorno = 'produto-list.html'
+class ProdutoList(ListView):
+
+    template_name = 'produto-list.html'
+    model = Produto
+    paginate_by = 5
 
     def dispatch(self, request, *args, **kwargs):
         logger.info(f"ProdutoList {request.method}")
         return super().dispatch(request, *args, **kwargs)
 
-    def get(self, request):
-        produtos = Produto.objects.all().filter(status=True)
-        return render(request, self.retorno, { 'produtos': produtos })
+    def get_queryset(self):
+        new_context = Produto.objects.filter(
+            status=True,
+        ).order_by('descricao')
+        return new_context
 
 
 class ProdutoNew(CreateView):
