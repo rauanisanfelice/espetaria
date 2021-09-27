@@ -16,10 +16,10 @@ urlpatterns = [
     path('mesa-end/<int:id_mesa>/', MesaEnd.as_view(), name='mesa_end'),
 
     # PRODUTOS
-    path('produto-list/',ProdutoList.as_view(), name='produto_list'),
-    path('produto-novo/',ProdutoNew.as_view(), name='produto_new'),
-    path('produto-dell/<int:id_produto>/',ProdutoDell, name='produto_dell'),
-    path('produto-edit/<int:id_produto>/',ProdutoEdit.as_view(), name='produto_edit'),
+    path('produto-list/', ProdutoList.as_view(), name='produto_list'),
+    path('produto-novo/', ProdutoNew.as_view(), name='produto_new'),
+    path('produto-dell/<int:id_produto>/', ProdutoDell, name='produto_dell'),
+    path('produto-edit/<int:id_produto>/', ProdutoEdit.as_view(), name='produto_edit'),
 
     # REPORTS
     path('reports/', Reports.as_view(), name='reports'),
