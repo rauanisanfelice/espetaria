@@ -15,34 +15,18 @@
     <div class="row">
         <div class="col-12">
 
-            {% if erro %}
-                <br><div class="row justify-content-center">
-                    <div class="alert alert-danger" role="alert">
-                        {{ menssagem_erro }}
-                    </div>
-                </div>
-            {% endif %}
-
-            {% if succes %}
-                <br><div class="row justify-content-center">
-                    <div class="alert alert-success" role="alert">
-                        {{ menssagem_succes }}
-                    </div>
-                </div>
-            {% endif %}
-
-            <!-- a href="{% url 'produto_new' %}" class="btn btn-primary btn-lg btn-block"><i class="fa fa-plus" aria-hidden="true"></i> Adicionar Produto</a -->
-
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">Produto</th>
                         <th scope="col">Valor Unitário</th>
-                        <th scope="col" class="text-center"><a href="{% url 'produto_new' %}"><i class="fa fa-plus" aria-hidden="true"></i></a></th>
+                        <th scope="col" class="text-center">
+                            <a href="{% url 'produto_new' %}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for produto in produtos %}
+                    {% for produto in object_list %}
                         <tr>
                             <td>{{ produto.descricao }}</td>
                             <td>{{ produto.valor_unid }}</td>
@@ -55,7 +39,27 @@
                 </tbody>
             </table>
 
-
+            {% if page_obj.has_other_pages %}
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
+                {% endif %}
+                {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+                {% endif %}
+            </ul>
+            {% endif %}
 
         </div>
     </div>
